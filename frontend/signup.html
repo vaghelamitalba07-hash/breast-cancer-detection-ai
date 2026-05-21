@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | OncoSense AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .signup-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ec489a, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #a1a1aa;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #d4d4d8;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ec489a;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #ec489a, #8b5cf6);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            color: #ef4444;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .links a {
+            color: #ec489a;
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo">🔬 OncoSense AI</div>
+        <h2>Create Account</h2>
+        <p class="subtitle">Join to access AI-powered predictions</p>
+        
+        <div id="error" class="error hidden"></div>
+        
+        <form id="signup-form">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Choose a username" required>
+            </div>
+            <div class="form-group">
+                <label>Password (min 6 characters)</label>
+                <input type="password" id="password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" id="confirm" required>
+            </div>
+            <button type="submit">Create Account</button>
+        </form>
+        
+        <div class="links">
+            <a href="/login">Already have an account? Sign in</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "/api";
+        
+        async function apiFetch(path, options = {}) {
+            const res = await fetch(`${API_BASE}${path}`, {
+                ...options,
+                headers: { "Content-Type": "application/json", ...options.headers }
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || "Request failed");
+            return data;
+        }
+        
+        document.getElementById("signup-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const errorDiv = document.getElementById("error");
+            errorDiv.classList.add("hidden");
+            
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const confirm = document.getElementById("confirm").value;
+            
+            if (password !== confirm) {
+                errorDiv.textContent = "Passwords do not match";
+                errorDiv.classList.remove("hidden");
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorDiv.textContent = "Password must be at least 6 characters";
+                errorDiv.classList.remove("hidden");
+                return;
+            }
+            
+            try {
+                const data = await apiFetch("/auth/register", {
+                    method: "POST",
+                    body: JSON.stringify({ username, password })
+                });
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("username", data.username);
+                window.location.href = "/dashboard";
+            } catch (err) {
+                errorDiv.textContent = err.message;
+                errorDiv.classList.remove("hidden");
+            }
+        });
+    </script>
+</body>
+</html>

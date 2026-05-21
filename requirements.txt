@@ -1,0 +1,4 @@
+# Install backend dependencies only:
+#   pip install -r backend/requirements.txt
+
+-r backend/requirements.txt

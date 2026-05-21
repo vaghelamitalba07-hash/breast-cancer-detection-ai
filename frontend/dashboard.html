@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OncoSense AI - Breast Cancer Detection Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ec489a, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ec489a;
+        }
+
+        /* Main Container */
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar h3 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            color: #ec489a;
+        }
+
+        .metric-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ec489a;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: #a1a1aa;
+            margin-top: 0.25rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+        }
+
+        th, td {
+            padding: 0.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: #ec489a;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .main-card h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .main-card p {
+            color: #a1a1aa;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Input Grid */
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            color: #a1a1aa;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #ec489a;
+            background: rgba(236, 72, 153, 0.1);
+        }
+
+        /* Predict Button */
+        .predict-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ec489a, #8b5cf6);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Result Section */
+        .result-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-high {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+            border: 2px solid #ef4444;
+        }
+
+        .result-mid {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1));
+            border: 2px solid #f59e0b;
+        }
+
+        .result-low {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+            border: 2px solid #10b981;
+        }
+
+        .probability {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .risk-level {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .message {
+            color: #d4d4d8;
+            font-size: 0.9rem;
+        }
+
+        .confidence {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #a1a1aa;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(236, 72, 153, 0.3);
+            border-top-color: #ec489a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Login Section */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            color: white;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            background: linear-gradient(135deg, #ec489a, #8b5cf6);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+        <h2>🔬 OncoSense AI</h2>
+        <p style="margin: 1rem 0; color: #a1a1aa;">Login to access dashboard</p>
+        <input type="text" id="loginUsername" placeholder="Username" value="demo">
+        <input type="password" id="loginPassword" placeholder="Password" value="demo123">
+        <div id="loginError" class="error-msg hidden"></div>
+        <button class="login-btn" onclick="login()">Login</button>
+        <p style="margin-top: 1rem; font-size: 0.8rem; color: #71717a;">
+            Demo: demo / demo123
+        </p>
+    </div>
+</div>
+
+<div id="dashboardContent" class="hidden">
+    <div class="header">
+        <div class="logo">🔬 OncoSense AI</div>
+        <div class="user-info">
+            <span>👤 <span id="usernameDisplay"></span></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>📊 Model Performance</h3>
+            <div class="metric-card">
+                <div class="metric-value" id="accuracy">97.1%</div>
+                <div class="metric-label">Test Accuracy</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="rocAuc">99.0%</div>
+                <div class="metric-label">ROC-AUC Score</div>
+            </div>
+            
+            <h3 style="margin-top: 1.5rem;">📈 Threshold Performance</h3>
+            <table>
+                <thead>
+                    <tr><th>Threshold</th><th>Sens.</th><th>Spec.</th></tr>
+                </thead>
+                <tbody id="thresholdsTable">
+                    <tr><td>0.5</td><td>93.8%</td><td>99.1%</td></tr>
+                    <tr><td>0.3</td><td>96.9%</td><td>97.2%</td></tr>
+                    <tr><td>0.2</td><td>98.4%</td><td>91.6%</td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 1.5rem;">🧬 Dataset Info</h3>
+            <div class="metric-card">
+                <div class="metric-value">569</div>
+                <div class="metric-label">Samples</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">30</div>
+                <div class="metric-label">Features</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">100</div>
+                <div class="metric-label">Decision Trees</div>
+            </div>
+        </aside>
+
+        <main>
+            <div class="main-card">
+                <h2>🔬 Run a Prediction</h2>
+                <p>Enter 9 key cell nucleus measurements from FNA biopsy (Fine Needle Aspirate)</p>
+
+                <div class="inputs-grid">
+                    <div class="input-group">
+                        <label>🔴 Concave Points (Worst) [0-0.3]</label>
+                        <input type="number" id="concave_points_worst" step="0.01" value="0.08">
+                    </div>
+                    <div class="input-group">
+                        <label>📏 Radius (Worst) [5-30]</label>
+                        <input type="number" id="radius_worst" step="1" value="14">
+                    </div>
+                    <div class="input-group">
+                        <label>📐 Area (Worst) [200-2500]</label>
+                        <input type="number" id="area_worst" step="50" value="600">
+                    </div>
+                    <div class="input-group">
+                        <label>🔴 Concave Points (Mean) [0-0.2]</label>
+                        <input type="number" id="concave_points_mean" step="0.01" value="0.05">
+                    </div>
+                    <div class="input-group">
+                        <label>📏 Perimeter (Worst) [50-200]</label>
+                        <input type="number" id="perimeter_worst" step="5" value="90">
+                    </div>
+                    <div class="input-group">
+                        <label>🔴 Concavity (Mean) [0-0.4]</label>
+                        <input type="number" id="concavity_mean" step="0.01" value="0.088">
+                    </div>
+                    <div class="input-group">
+                        <label>🎨 Texture (Worst) [10-40]</label>
+                        <input type="number" id="texture_worst" step="1" value="22">
+                    </div>
+                    <div class="input-group">
+                        <label>✨ Smoothness (Worst) [0.05-0.2]</label>
+                        <input type="number" id="smoothness_worst" step="0.01" value="0.12">
+                    </div>
+                    <div class="input-group">
+                        <label>🔄 Symmetry (Worst) [0.1-0.4]</label>
+                        <input type="number" id="symmetry_worst" step="0.01" value="0.29">
+                    </div>
+                </div>
+
+                <button class="predict-btn" onclick="predict()">
+                    🔬 Analyze & Predict Cancer Risk
+                </button>
+
+                <div id="resultSection" class="result-section hidden"></div>
+                <div id="loadingSection" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>Analyzing cell morphology with AI...</p>
+                </div>
+            </div>
+
+            <div class="main-card" style="margin-top: 1.5rem;">
+                <h3>📖 How It Works</h3>
+                <p style="font-size: 0.85rem; line-height: 1.6;">
+                    The model uses a <strong>Random Forest classifier with 100 decision trees</strong> trained on 
+                    <strong>569 biopsy samples</strong> from the UCI Wisconsin Breast Cancer Dataset. 
+                    It analyzes 30 morphological features (radius, texture, perimeter, area, smoothness, 
+                    compactness, concavity, concave points, symmetry, fractal dimension - each measured as 
+                    mean, standard error, and worst value).
+                </p>
+                <p style="font-size: 0.8rem; color: #f59e0b; margin-top: 1rem;">
+                    ⚠️ <strong>Medical Disclaimer:</strong> This is a research prototype. Not FDA-approved. 
+                    Not for clinical decisions. Always consult a qualified medical professional.
+                </p>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    let authToken = null;
+
+    // Check if already logged in
+    const savedToken = localStorage.getItem('token');
+    const savedUsername = localStorage.getItem('username');
+    if (savedToken && savedUsername) {
+        authToken = savedToken;
+        document.getElementById('loginOverlay').classList.add('hidden');
+        document.getElementById('dashboardContent').classList.remove('hidden');
+        document.getElementById('usernameDisplay').textContent = savedUsername;
+    }
+
+    async function login() {
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        const errorDiv = document.getElementById('loginError');
+        
+        errorDiv.classList.add('hidden');
+        
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const data = await res.json();
+            
+            if (res.ok) {
+                authToken = data.token;
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('username', data.username);
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.getElementById('dashboardContent').classList.remove('hidden');
+                document.getElementById('usernameDisplay').textContent = data.username;
+            } else {
+                errorDiv.textContent = data.detail || 'Login failed';
+                errorDiv.classList.remove('hidden');
+            }
+        } catch (err) {
+            errorDiv.textContent = 'Connection error. Make sure server is running.';
+            errorDiv.classList.remove('hidden');
+        }
+    }
+
+    async function logout() {
+        if (authToken) {
+            try {
+                await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+            } catch (err) {}
+        }
+        authToken = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        document.getElementById('loginOverlay').classList.remove('hidden');
+        document.getElementById('dashboardContent').classList.add('hidden');
+    }
+
+    async function predict() {
+        const resultSection = document.getElementById('resultSection');
+        const loadingSection = document.getElementById('loadingSection');
+        
+        // Show loading
+        loadingSection.classList.remove('hidden');
+        resultSection.classList.add('hidden');
+        
+        // Get input values
+        const data = {
+            concave_points_worst: parseFloat(document.getElementById('concave_points_worst').value) || 0.08,
+            radius_worst: parseFloat(document.getElementById('radius_worst').value) || 14,
+            area_worst: parseFloat(document.getElementById('area_worst').value) || 600,
+            concave_points_mean: parseFloat(document.getElementById('concave_points_mean').value) || 0.05,
+            perimeter_worst: parseFloat(document.getElementById('perimeter_worst').value) || 90,
+            concavity_mean: parseFloat(document.getElementById('concavity_mean').value) || 0.088,
+            texture_worst: parseFloat(document.getElementById('texture_worst').value) || 22,
+            smoothness_worst: parseFloat(document.getElementById('smoothness_worst').value) || 0.12,
+            symmetry_worst: parseFloat(document.getElementById('symmetry_worst').value) || 0.29
+        };
+        
+        try {
+            const res = await fetch('/api/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await res.json();
+            
+            if (res.ok) {
+                let riskClass = '';
+                let riskText = '';
+                
+                if (result.level === 'elevated') {
+                    riskClass = 'result-high';
+                    riskText = '⚠️ HIGH RISK';
+                } else if (result.level === 'intermediate') {
+                    riskClass = 'result-mid';
+                    riskText = '⚠️ MODERATE RISK';
+                } else {
+                    riskClass = 'result-low';
+                    riskText = '✅ LOW RISK';
+                }
+                
+                resultSection.className = `result-section ${riskClass}`;
+                resultSection.innerHTML = `
+                    <div class="probability">${result.probability_percent}%</div>
+                    <div class="risk-level">${riskText}</div>
+                    <div class="message">${result.message}</div>
+                    <div class="confidence">Based on Random Forest analysis of 30 morphological features</div>
+                `;
+                resultSection.classList.remove('hidden');
+            } else {
+                resultSection.className = 'result-section result-high';
+                resultSection.innerHTML = `<div class="message">❌ Error: ${result.detail || 'Prediction failed'}</div>`;
+                resultSection.classList.remove('hidden');
+            }
+        } catch (err) {
+            resultSection.className = 'result-section result-high';
+            resultSection.innerHTML = `<div class="message">❌ Connection error. Make sure server is running.</div>`;
+            resultSection.classList.remove('hidden');
+        } finally {
+            loadingSection.classList.add('hidden');
+        }
+    }
+</script>
+</body>
+</html>
