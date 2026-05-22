@@ -655,13 +655,6 @@
             .charts-grid { grid-template-columns: 1fr; }
         }
         /* Force Seminars Tab to be visible */
-#seminarsTab {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative;
-    z-index: 10;
-}
 
 .main-content {
     overflow-y: auto;
@@ -767,12 +760,12 @@
             <div class="right-sidebar">
                 <div class="main-card">
                     <h3>📊 Threshold Performance</h3>
-                    <table style="width:100%"><thead><tr><th>Threshold</th><th>Sens.</th><th>Spec.</th></tr></thead>
-                    <tbody><tr><td>0.5</td><td>93.8%</td><td>99.1%</td></tr>
-                    <tr><td>0.3</td><td>96.9%</td><td>97.2%</td></tr>
-                    <tr><td>0.2</td><td>98.4%</td><td>91.6%</td></tr>
+                    <table style="width:100%"><thead><tr><th>Threshold</th><th>Sens.</th><th>Spec.</th></table></thead>
+                    <tbody><tr><td class="td-bold">0.5</td><td>93.8%</td><td>99.1%</td></tr>
+                    <tr><td class="td-bold">0.3</td><td>96.9%</td><td>97.2%</td></tr>
+                    <tr><td class="td-bold">0.2</td><td>98.4%</td><td>91.6%</td></tr>
                     </tbody>
-                    </table>
+                </table>
                 </div>
             </div>
         </div>
@@ -821,69 +814,49 @@
         <div class="main-card"><h2>🎗️ Support Breast Cancer Awareness</h2><div style="display:flex; gap:0.5rem; justify-content:center; margin:1rem 0;"><button class="btn-small" onclick="openDonate(100)">₹100</button><button class="btn-small" onclick="openDonate(500)">₹500</button><button class="btn-small" onclick="openDonate(1000)">₹1000</button></div><button class="btn-primary" onclick="openDonate()">Donate Now ❤️</button></div>
     </div>
 
-<!-- Seminars Tab -->
-<div id="seminarsTab" class="tab-content">
-    <!-- UPCOMING SEMINARS -->
-<div class="main-card">
-    <h2>📅 Upcoming Seminars</h2>
-    <div class="doctors-grid">
-        <div class="doctor-card">
-            <div class="doctor-header">
-                <div class="doctor-avatar">🎗️</div>
-                <div><div class="doctor-name">Breast Cancer Early Detection Seminar</div><div class="doctor-specialty">Organized by OncoSense AI</div></div>
-            </div>
-            <p>📍 Vadodara, Gujarat</p>
-            <p>📅 25 May 2026</p>
-            <p>🕒 11:00 AM</p>
-            <p>👩‍⚕️ Guest: Dr. Priya Sharma</p>
-            <button class="btn-primary" onclick="registerSeminar('Breast Cancer Early Detection Seminar')" style="margin-top:0.8rem;">📝 Register Now</button>
+    <!-- Seminars Tab -->
+    <div id="seminarsTab" class="tab-content">
+        <div class="main-card">
+            <h2>🎤 Breast Cancer Awareness Seminars</h2>
+            <p>Join awareness programs, health workshops, and AI healthcare seminars.</p>
         </div>
-        <div class="doctor-card">
-            <div class="doctor-header">
-                <div class="doctor-avatar">🤖</div>
-                <div><div class="doctor-name">AI in Breast Cancer Screening</div><div class="doctor-specialty">Organized by AI Health India</div></div>
-            </div>
-            <p>📍 Ahmedabad (Online)</p>
-            <p>📅 28 May 2026</p>
-            <p>🕒 10:30 AM</p>
-            <p>👨‍⚕️ Guest: Dr. Michael Chen</p>
-            <button class="btn-primary" onclick="registerSeminar('AI in Breast Cancer Screening')" style="margin-top:0.8rem;">📝 Register Now</button>
-        </div>
-    </div>
-</div>
 
-<!-- LIVE NOW -->
-<div class="main-card">
-    <h2>🔴 Currently Live</h2>
-    <div class="doctors-grid">
-        <div class="doctor-card" style="border: 2px solid #10b981;">
-            <div class="doctor-header">
-                <div class="doctor-avatar">🔴</div>
-                <div><div class="doctor-name">Survivor Stories & Self-Examination</div><div class="doctor-specialty" style="color:#10b981;">LIVE NOW</div></div>
+        <div class="main-card">
+            <h2>📅 Upcoming Seminars</h2>
+            <div class="doctors-grid">
+                <div class="doctor-card">
+                    <div class="doctor-header"><div class="doctor-avatar">🎗️</div><div><div class="doctor-name">Breast Cancer Early Detection Seminar</div><div class="doctor-specialty">Organized by OncoSense AI</div></div></div>
+                    <p>📍 Vadodara, Gujarat</p><p>📅 25 May 2026</p><p>🕒 11:00 AM</p><p>👩‍⚕️ Guest: Dr. Priya Sharma</p>
+                    <button class="btn-primary" onclick="registerSeminar('Breast Cancer Early Detection Seminar')" style="margin-top:0.8rem;">📝 Register Now</button>
+                </div>
+                <div class="doctor-card">
+                    <div class="doctor-header"><div class="doctor-avatar">🤖</div><div><div class="doctor-name">AI in Breast Cancer Screening</div><div class="doctor-specialty">Organized by AI Health India</div></div></div>
+                    <p>📍 Ahmedabad (Online)</p><p>📅 28 May 2026</p><p>🕒 10:30 AM</p><p>👨‍⚕️ Guest: Dr. Michael Chen</p>
+                    <button class="btn-primary" onclick="registerSeminar('AI in Breast Cancer Screening')" style="margin-top:0.8rem;">📝 Register Now</button>
+                </div>
             </div>
-            <p>📍 Online Webinar</p>
-            <p>🕒 02:00 PM</p>
-            <p>👩‍⚕️ Guest: Ms. Sarah Johnson (Survivor)</p>
-            <button class="btn-primary" onclick="window.open('https://meet.google.com', '_blank')" style="margin-top:0.8rem; background:#10b981;">▶️ Join Live Session</button>
         </div>
-    </div>
-</div>
 
-<!-- PAST SEMINARS -->
-<div class="main-card">
-    <h2>📜 Past Seminars (Last 30 Days)</h2>
-    <div class="doctors-grid">
-        <div class="doctor-card">
-            <div class="doctor-header"><div class="doctor-avatar">📋</div><div><div class="doctor-name">Breast Health Awareness Camp</div></div></div>
-            <p>📍 Mumbai</p><p>📅 15 April 2026</p><p>👩‍⚕️ Guest: Dr. Emily Rodriguez</p>
+        <div class="main-card">
+            <h2>🔴 Currently Live</h2>
+            <div class="doctors-grid">
+                <div class="doctor-card" style="border: 2px solid #10b981;">
+                    <div class="doctor-header"><div class="doctor-avatar">🔴</div><div><div class="doctor-name">Survivor Stories & Self-Examination</div><div class="doctor-specialty" style="color:#10b981;">LIVE NOW</div></div></div>
+                    <p>📍 Online Webinar</p><p>🕒 02:00 PM</p><p>👩‍⚕️ Guest: Ms. Sarah Johnson (Survivor)</p>
+                    <button class="btn-primary" onclick="window.open('https://meet.google.com', '_blank')" style="margin-top:0.8rem; background:#10b981;">▶️ Join Live Session</button>
+                </div>
+            </div>
         </div>
-        <div class="doctor-card">
-            <div class="doctor-header"><div class="doctor-avatar">📋</div><div><div class="doctor-name">Women's Health & Wellness Summit</div></div></div>
-            <p>📍 Delhi</p><p>📅 10 April 2026</p><p>👨‍⚕️ Guest: Dr. David Kim</p>
+
+        <div class="main-card">
+            <h2>📜 Past Seminars (Last 30 Days)</h2>
+            <div class="doctors-grid">
+                <div class="doctor-card"><div class="doctor-header"><div class="doctor-avatar">📋</div><div><div class="doctor-name">Breast Health Awareness Camp</div></div></div><p>📍 Mumbai</p><p>📅 15 April 2026</p><p>👩‍⚕️ Guest: Dr. Emily Rodriguez</p></div>
+                <div class="doctor-card"><div class="doctor-header"><div class="doctor-avatar">📋</div><div><div class="doctor-name">Women's Health & Wellness Summit</div></div></div><p>📍 Delhi</p><p>📅 10 April 2026</p><p>👨‍⚕️ Guest: Dr. David Kim</p></div>
+            </div>
         </div>
     </div>
-</div>
-</div>
+</main>
 
 <!-- Donation Modal -->
 <div id="donationModal" class="modal">
@@ -899,7 +872,8 @@
         </div>
     </div>
 </div>
-          <!-- Registration Modal for Seminars -->
+
+<!-- Registration Modal for Seminars -->
 <div id="registrationModal" class="modal">
     <div class="modal-content">
         <h3>📝 Seminar Registration</h3>
@@ -912,7 +886,6 @@
         </div>
     </div>
 </div>
-        
 
 <script>
     // ========== DATA MANAGEMENT ==========
@@ -922,14 +895,12 @@
     }
     
     function savePredictions(predictions) {
-        // Keep only last 20 predictions
         if (predictions.length > 20) {
             predictions = predictions.slice(0, 20);
         }
         localStorage.setItem('oncosense_predictions', JSON.stringify(predictions));
     }
     
-    // Calculate risk score based on inputs
     function calculateRiskScore(data) {
         let score = 0;
         if (data.concave_points_worst > 0.1) score += 25;
@@ -954,20 +925,8 @@
         return '✅ Based on your measurements, the risk appears low. Continue regular checkups.';
     }
     
-    // Chart instances
     let riskTrendChart, riskDistributionChart, performanceChart, monthlyActivityChart;
     
-    // ========== CLEAR HISTORY ==========
-    function clearHistory() {
-        if (confirm('Are you sure you want to delete all prediction history? This cannot be undone.')) {
-            localStorage.removeItem('oncosense_predictions');
-            loadHistory();
-            updateAnalytics();
-            alert('✅ History cleared successfully!');
-        }
-    }
-    
-    // ========== LOAD HISTORY ==========
     function loadHistory() {
         const predictions = getPredictions();
         const container = document.getElementById('historyContent');
@@ -991,7 +950,6 @@
         html += '</tbody></table>';
         container.innerHTML = html;
         
-        // Update profile stats
         document.getElementById('profileTotalPred').textContent = predictions.length;
         const highRiskCount = predictions.filter(p => p.risk_level === 'High Risk').length;
         document.getElementById('profileHighRisk').textContent = highRiskCount;
@@ -999,7 +957,6 @@
         document.getElementById('profileAvgRisk').textContent = avgRisk.toFixed(1) + '%';
     }
     
-    // ========== UPDATE ANALYTICS ==========
     function updateAnalytics() {
         const predictions = getPredictions();
         
@@ -1033,8 +990,6 @@
         if (predictions.length === 0) return;
         
         const sortedPredictions = [...predictions].sort((a,b) => new Date(a.date) - new Date(b.date));
-        
-        // Risk Trend Chart
         const dates = sortedPredictions.map(p => {
             const d = new Date(p.date);
             return `${d.getMonth()+1}/${d.getDate()}`;
@@ -1048,7 +1003,6 @@
             options: { responsive: true, maintainAspectRatio: true, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Risk Score (%)' } } } }
         });
         
-        // Risk Distribution Pie Chart
         const highCount = predictions.filter(p => p.risk_level === 'High Risk').length;
         const midCount = predictions.filter(p => p.risk_level === 'Moderate Risk').length;
         const lowCount = predictions.filter(p => p.risk_level === 'Low Risk').length;
@@ -1060,7 +1014,6 @@
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
         
-        // Model Performance (static)
         if (performanceChart) performanceChart.destroy();
         performanceChart = new Chart(document.getElementById('performanceChart'), {
             type: 'radar',
@@ -1068,7 +1021,6 @@
             options: { responsive: true, scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } } }
         });
         
-        // Monthly Activity Chart
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const monthlyCounts = new Array(12).fill(0);
         predictions.forEach(p => {
@@ -1084,7 +1036,6 @@
         });
     }
     
-    // ========== PREDICT FUNCTION ==========
     async function predict() {
         const fields = ['concave_points_worst', 'radius_worst', 'area_worst', 'concave_points_mean', 
                         'perimeter_worst', 'concavity_mean', 'texture_worst', 'smoothness_worst', 'symmetry_worst'];
@@ -1128,7 +1079,6 @@
             document.getElementById('resultSection').classList.remove('hidden');
             document.getElementById('loadingSection').classList.add('hidden');
             
-            // Save prediction
             const predictions = getPredictions();
             const newPrediction = {
                 id: Date.now(),
@@ -1140,7 +1090,6 @@
             predictions.unshift(newPrediction);
             savePredictions(predictions);
             
-            // Save last prediction for report
             lastPredictionData = {
                 risk_score: score,
                 risk_level: riskLevel,
@@ -1148,13 +1097,11 @@
             };
             document.getElementById('reportButton').classList.remove('hidden');
             
-            loadHistory();      // Refresh history tab
-            updateAnalytics();  // Refresh analytics charts
-            
+            loadHistory();
+            updateAnalytics();
         }, 1500);
     }
     
-    // ========== DOCTORS ==========
     function loadDoctors() {
         const doctors = [
             { name: "Dr. Sarah Johnson", specialty: "Breast Surgical Oncologist", experience: "15+ years", hospital: "Memorial Sloan Kettering", rating: 4.9, avatar: "👩‍⚕️" },
@@ -1194,7 +1141,6 @@
         updateConsultationsList();
     }
     
-    // ========== DONATION ==========
     function openDonate(amount) {
         const m = document.getElementById('donationModal');
         if(amount) document.getElementById('donorAmount').value = amount;
@@ -1222,21 +1168,15 @@
         document.getElementById('donorMessage').value = '';
     }
     
-    // ========== PROFILE & QUOTES ==========
     function toggleProfile() {
         document.getElementById('profilePanel').classList.toggle('open');
     }
     
     function logout(){
-
-    // remove only login data
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-
-    // redirect
-    window.location.href = '/login';
-}
-    
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        window.location.href = '/login';
+    }
     
     const quotes = [
         { text: "The best protection is early detection. You are stronger than you know.", author: "— Breast Cancer Awareness" },
@@ -1256,7 +1196,6 @@
     }
     setInterval(updateQuote, 10000);
     
-    // ========== TAB SWITCHING ==========
     document.querySelectorAll('.sidebar-menu-item').forEach(item => {
         item.addEventListener('click', () => {
             const tabName = item.getAttribute('data-tab');
@@ -1272,7 +1211,6 @@
         });
     });
     
-    // ========== DARK MODE ==========
     function toggleDarkMode() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
@@ -1281,14 +1219,12 @@
         if (btn) btn.textContent = isDark ? '☀️' : '🌙';
     }
     
-    // Load dark mode preference
     if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
         const btn = document.querySelector('.top-bar button');
         if (btn) btn.textContent = '☀️';
     }
     
-    // ========== PDF REPORT ==========
     let lastPredictionData = null;
     
     function downloadReport() {
@@ -1331,7 +1267,6 @@
         html2pdf().set({ margin: 0.5, filename: `OncoSense_Report_${Date.now()}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(reportHTML).save();
     }
     
-    // ========== DONATION CERTIFICATE ==========
     function generateCertificate(name, amount) {
         const certificateHTML = `
             <!DOCTYPE html>
@@ -1363,7 +1298,6 @@
         html2pdf().set({ margin: 0.5, filename: `OncoSense_Certificate_${name.replace(/\s+/g, '_')}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(certificateHTML).save();
     }
     
-    // ========== INITIALIZE ==========
     const username = localStorage.getItem('username') || 'Guest';
     document.getElementById('profileNameDisplay').textContent = username;
     document.getElementById('profileAvatar').textContent = username[0].toUpperCase();
@@ -1374,7 +1308,6 @@
     loadHistory();
     updateAnalytics();
     
-    // Auto-refresh analytics when new predictions are added
     setInterval(() => {
         if (document.getElementById('analyticsTab').classList.contains('active')) {
             updateAnalytics();
@@ -1384,7 +1317,6 @@
         }
     }, 3000);
     
-    // Close profile when clicking outside
     document.addEventListener('click', function(event) {
         const panel = document.getElementById('profilePanel');
         const trigger = document.querySelector('.profile-trigger');
@@ -1392,192 +1324,107 @@
             panel.classList.remove('open');
         }
     });
+    
     // ========== SEMINARS DATA ==========
-const seminarsData = [
-    {
-        id: 1,
-        title: "Breast Cancer Early Detection Seminar",
-        date: "2026-05-25",
-        time: "11:00 AM",
-        location: "Vadodara, Gujarat",
-        organizer: "OncoSense AI",
-        guest: "Dr. Priya Sharma",
-        status: "upcoming",
-        registered: 124,
-        maxSeats: 200,
-        category: "Awareness"
-    },
-    {
-        id: 2,
-        title: "AI in Breast Cancer Screening",
-        date: "2026-05-28",
-        time: "10:30 AM",
-        location: "Ahmedabad (Online)",
-        organizer: "OncoSense AI",
-        guest: "Dr. Michael Chen",
-        status: "upcoming",
-        registered: 89,
-        maxSeats: 500,
-        category: "Technology"
-    },
-    {
-        id: 3,
-        title: "Survivor Stories & Self-Examination",
-        date: new Date().toISOString().slice(0,10),
-        time: "02:00 PM",
-        location: "Online Webinar",
-        organizer: "OncoSense AI",
-        guest: "Ms. Sarah Johnson (Survivor)",
-        status: "live",
-        registered: 567,
-        maxSeats: 1000,
-        category: "Awareness"
-    },
-    {
-        id: 4,
-        title: "Breast Health Awareness Camp",
-        date: "2026-04-15",
-        time: "09:00 AM",
-        location: "Mumbai",
-        organizer: "OncoSense AI",
-        guest: "Dr. Emily Rodriguez",
-        status: "past",
-        registered: 345,
-        maxSeats: 300,
-        category: "Screening"
-    },
-    {
-        id: 5,
-        title: "Women's Health & Wellness Summit",
-        date: "2026-04-10",
-        time: "11:00 AM",
-        location: "Delhi",
-        organizer: "OncoSense AI",
-        guest: "Dr. David Kim",
-        status: "past",
-        registered: 512,
-        maxSeats: 500,
-        category: "Wellness"
-    }
-];
-
-// Get seminar registrations from localStorage
-function getSeminarRegistrations() {
-    const regs = localStorage.getItem('seminarRegistrations');
-    return regs ? JSON.parse(regs) : [];
-}
-
-// Save seminar registration
-function saveSeminarRegistration(registration) {
-    const regs = getSeminarRegistrations();
-    regs.push(registration);
-    localStorage.setItem('seminarRegistrations', JSON.stringify(regs));
-}
-
-// Check if user already registered for a seminar
-function isRegisteredForSeminar(seminarId) {
-    const regs = getSeminarRegistrations();
-    return regs.some(r => r.seminarId === seminarId && r.email === document.getElementById('donorEmail')?.value);
-}
-
-// Load seminars
- function loadSeminars() {
-    // Dynamic divs not used anymore - content already in HTML
-    console.log('Seminars tab loaded (static content)');
-}
-
-function renderSeminarCards(seminars, type) {
-    if (seminars.length === 0) {
-        return '<div style="text-align:center; padding:2rem; color:#a47288;">No seminars found.</div>';
+    const seminarsData = [
+        { id: 1, title: "Breast Cancer Early Detection Seminar", date: "2026-05-25", time: "11:00 AM", location: "Vadodara, Gujarat", organizer: "OncoSense AI", guest: "Dr. Priya Sharma", status: "upcoming", registered: 124, maxSeats: 200, category: "Awareness" },
+        { id: 2, title: "AI in Breast Cancer Screening", date: "2026-05-28", time: "10:30 AM", location: "Ahmedabad (Online)", organizer: "OncoSense AI", guest: "Dr. Michael Chen", status: "upcoming", registered: 89, maxSeats: 500, category: "Technology" },
+        { id: 3, title: "Survivor Stories & Self-Examination", date: new Date().toISOString().slice(0,10), time: "02:00 PM", location: "Online Webinar", organizer: "OncoSense AI", guest: "Ms. Sarah Johnson (Survivor)", status: "live", registered: 567, maxSeats: 1000, category: "Awareness" },
+        { id: 4, title: "Breast Health Awareness Camp", date: "2026-04-15", time: "09:00 AM", location: "Mumbai", organizer: "OncoSense AI", guest: "Dr. Emily Rodriguez", status: "past", registered: 345, maxSeats: 300, category: "Screening" },
+        { id: 5, title: "Women's Health & Wellness Summit", date: "2026-04-10", time: "11:00 AM", location: "Delhi", organizer: "OncoSense AI", guest: "Dr. David Kim", status: "past", registered: 512, maxSeats: 500, category: "Wellness" }
+    ];
+    
+    function getSeminarRegistrations() {
+        const regs = localStorage.getItem('seminarRegistrations');
+        return regs ? JSON.parse(regs) : [];
     }
     
-    let html = '<div class="doctors-grid">';
-    seminars.forEach(seminar => {
-        const registeredCount = seminar.registered || 0;
-        const available = (seminar.maxSeats - registeredCount);
-        const isFull = available <= 0;
+    function saveSeminarRegistration(registration) {
+        const regs = getSeminarRegistrations();
+        regs.push(registration);
+        localStorage.setItem('seminarRegistrations', JSON.stringify(regs));
+    }
+    
+    function loadSeminars() {
+        console.log('Seminars tab loaded (static content)');
+    }
+    
+    let currentSeminarId = null;
+    
+    function openRegistrationModal(seminarId) {
+        currentSeminarId = seminarId;
+        const seminar = seminarsData.find(s => s.id === seminarId);
+        if (!seminar) return;
         
-        html += `
-            <div class="seminar-card" style="background: white; border-radius: 1rem; padding: 1rem; border: 1px solid rgba(232,58,107,0.1);">
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-                    <div style="background: ${type === 'live' ? '#10b981' : (type === 'upcoming' ? '#e83a6b' : '#6b4c60')}; color: white; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.7rem;">
-                        ${type === 'live' ? '🔴 LIVE NOW' : (type === 'upcoming' ? '📅 Upcoming' : '📋 Past')}
-                    </div>
-                    <div style="font-size: 0.7rem; color: #e83a6b;">${seminar.category}</div>
-                </div>
-                <h3 style="margin: 0.5rem 0; font-size: 1.1rem;">${seminar.title}</h3>
-                <p style="font-size: 0.8rem; margin: 0.3rem 0;">📅 ${seminar.date}</p>
-                <p style="font-size: 0.8rem; margin: 0.3rem 0;">🕒 ${seminar.time}</p>
-                <p style="font-size: 0.8rem; margin: 0.3rem 0;">📍 ${seminar.location}</p>
-                <p style="font-size: 0.8rem; margin: 0.3rem 0;">👩‍⚕️ Guest: ${seminar.guest}</p>
-                <p style="font-size: 0.8rem; margin: 0.3rem 0;">🏢 ${seminar.organizer}</p>
-                <div style="margin: 0.5rem 0;">
-                    <div style="background: #f5f0f2; border-radius: 10px; height: 6px; overflow: hidden;">
-                        <div style="background: #e83a6b; width: ${(registeredCount/seminar.maxSeats)*100}%; height: 6px;"></div>
-                    </div>
-                    <p style="font-size: 0.7rem; margin-top: 0.3rem;">${registeredCount} / ${seminar.maxSeats} registered</p>
-                </div>
-                ${type !== 'past' ? `
-                    ${!isFull ? `<button class="btn-primary" onclick="openRegistrationModal(${seminar.id})" style="margin-top: 0.8rem; width: 100%;">📝 Register Now</button>` : `<button disabled style="margin-top: 0.8rem; width: 100%; padding: 0.8rem; background: #ccc; border: none; border-radius: 0.5rem;">❌ Full</button>`}
-                ` : ''}
-            </div>
-        `;
-    });
-    html += '</div>';
-    return html;
-}
-
-// Registration Modal
-let currentSeminarId = null;
-
-function openRegistrationModal(seminarId) {
-    currentSeminarId = seminarId;
-    const seminar = seminarsData.find(s => s.id === seminarId);
-    if (!seminar) return;
-    
-    document.getElementById('registerSeminarName').value = document.getElementById('profileFullName').textContent;
-    document.getElementById('registerSeminarEmail').value = document.getElementById('profileEmailAddress').textContent;
-    document.getElementById('registerSeminarPhone').value = '';
-    document.getElementById('registrationModal').style.display = 'flex';
-}
-
-function closeRegistrationModal() {
-    document.getElementById('registrationModal').style.display = 'none';
-    currentSeminarId = null;
-}
-
-function submitRegistration() {
-    const name = document.getElementById('registerSeminarName').value;
-    const email = document.getElementById('registerSeminarEmail').value;
-    const phone = document.getElementById('registerSeminarPhone').value;
-    const seminar = seminarsData.find(s => s.id === currentSeminarId);
-    
-    if (!name || !email || !phone) {
-        alert('Please fill all fields');
-        return;
+        document.getElementById('registerSeminarName').value = document.getElementById('profileFullName').textContent;
+        document.getElementById('registerSeminarEmail').value = document.getElementById('profileEmailAddress').textContent;
+        document.getElementById('registerSeminarPhone').value = '';
+        document.getElementById('registrationModal').style.display = 'flex';
     }
     
-    // Save registration
-    const registration = {
-        seminarId: currentSeminarId,
-        seminarTitle: seminar.title,
-        name: name,
-        email: email,
-        phone: phone,
-        date: new Date().toISOString(),
-        registrationId: 'REG-' + Date.now()
-    };
-    saveSeminarRegistration(registration);
+    function closeRegistrationModal() {
+        document.getElementById('registrationModal').style.display = 'none';
+        currentSeminarId = null;
+    }
     
-    // Update registered count
-    seminar.registered++;
-    localStorage.setItem('seminarsData', JSON.stringify(seminarsData));
+    function submitRegistration() {
+        const name = document.getElementById('registerSeminarName').value;
+        const email = document.getElementById('registerSeminarEmail').value;
+        const phone = document.getElementById('registerSeminarPhone').value;
+        const seminar = seminarsData.find(s => s.id === currentSeminarId);
+        
+        if (!name || !email || !phone) {
+            alert('Please fill all fields');
+            return;
+        }
+        
+        const registration = {
+            seminarId: currentSeminarId,
+            seminarTitle: seminar.title,
+            name: name,
+            email: email,
+            phone: phone,
+            date: new Date().toISOString(),
+            registrationId: 'REG-' + Date.now()
+        };
+        saveSeminarRegistration(registration);
+        
+        seminar.registered++;
+        localStorage.setItem('seminarsData', JSON.stringify(seminarsData));
+        
+        alert(`✅ Registration successful for "${seminar.title}"!\nYour Registration ID: ${registration.registrationId}\nPlease check your email for confirmation.`);
+        closeRegistrationModal();
+        loadSeminars();
+    }
     
-    alert(`✅ Registration successful for "${seminar.title}"!\nYour Registration ID: ${registration.registrationId}\nPlease check your email for confirmation.`);
-    closeRegistrationModal();
-    loadSeminars();
+    // ========== MISSING registerSeminar FUNCTION (FIXED) ==========
+    function registerSeminar(seminarName) {
+        const userName = document.getElementById('profileFullName').textContent;
+        const userEmail = document.getElementById('profileEmailAddress').textContent;
+        
+        let registrations = JSON.parse(localStorage.getItem('seminarRegistrations')) || [];
+        
+        registrations.push({
+            seminar: seminarName,
+            name: userName,
+            email: userEmail,
+            date: new Date().toLocaleString(),
+            registrationId: 'SEM-' + Date.now()
+        });
+        
+        localStorage.setItem('seminarRegistrations', JSON.stringify(registrations));
+        
+        alert(`✅ Successfully registered for "${seminarName}"!\n\nRegistration ID: SEM-${Date.now()}\n\n🎗️ Thank you for supporting breast cancer awareness!`);
+    }
     
-}
+    function clearHistory() {
+        if (confirm('Are you sure you want to delete all prediction history? This cannot be undone.')) {
+            localStorage.removeItem('oncosense_predictions');
+            loadHistory();
+            updateAnalytics();
+            alert('✅ History cleared successfully!');
+        }
+    }
 </script>
 </body>
 </html>
