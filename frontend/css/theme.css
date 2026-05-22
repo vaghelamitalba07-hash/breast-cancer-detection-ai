@@ -1,0 +1,151 @@
+/* OncoSense AI - Global Theme */
+:root {
+    --primary-pink: #e83a6b;
+    --primary-pink-dark: #cf2d5e;
+    --primary-pink-light: #ffeef4;
+    --bg-gradient: linear-gradient(145deg, #fff9f5 0%, #ffeef4 100%);
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --text-dark: #2a1a2e;
+    --text-muted: #5f4a58;
+    --border-pink: rgba(232,58,107,0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(145deg, #fff9f5 0%, #ffeef4 100%);
+    color: #2a1a2e;
+    min-height: 100vh;
+}
+
+/* Navigation */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(232,58,107,0.1);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #e83a6b, #b03b8b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.logo img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: white;
+    padding: 4px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #5a3e4b;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: #e83a6b;
+}
+
+.btn-pink-outline {
+    background: transparent;
+    border: 1.5px solid #e83a6b;
+    padding: 0.45rem 1.2rem;
+    border-radius: 40px;
+    color: #e83a6b;
+    font-weight: 600;
+}
+
+.btn-pink-solid {
+    background: #e83a6b;
+    border: none;
+    padding: 0.45rem 1.4rem;
+    border-radius: 40px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-pink-solid:hover {
+    background: #cf2d5e;
+    transform: translateY(-2px);
+}
+
+/* Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border-radius: 28px;
+    border: 1px solid rgba(232,58,107,0.1);
+    padding: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+}
+
+/* Dashboard Grid */
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Buttons */
+.btn-primary-pink {
+    background: #e83a6b;
+    padding: 0.8rem 2rem;
+    border-radius: 60px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary-pink:hover {
+    transform: translateY(-2px);
+    background: #cf2d5e;
+}
+
+.btn-outline-pink {
+    background: transparent;
+    border: 1.5px solid #e83a6b;
+    padding: 0.8rem 2rem;
+    border-radius: 60px;
+    color: #e83a6b;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn-outline-pink:hover {
+    background: rgba(232,58,107,0.05);
+}

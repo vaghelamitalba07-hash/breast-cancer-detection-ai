@@ -3,142 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OncoSense AI - Breast Cancer Detection Dashboard</title>
+    <title>OncoSense AI | Breast Cancer Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            min-height: 100vh;
-            color: #fff;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #fff9f5 0%, #ffeef4 100%);
+            color: #2a1a2e;
+            overflow-x: hidden;
         }
 
-        /* Header */
-        .header {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+        /* ========== SIDEBAR ========== */
+        .sidebar-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(18px);
+            border-right: 1px solid rgba(232, 58, 107, 0.12);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-direction: column;
+            z-index: 1000;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #ec489a, #8b5cf6);
+        .sidebar-logo {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(232, 58, 107, 0.1);
+        }
+
+        .sidebar-logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: white;
+            padding: 3px;
+        }
+
+        .sidebar-logo span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e83a6b, #b03b8b);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .sidebar-menu {
+            flex: 1;
+            padding: 1.5rem 1rem;
         }
 
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            color: white;
+        .sidebar-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            color: #5a3e4b;
             cursor: pointer;
+            font-weight: 500;
             transition: all 0.3s;
         }
 
-        .logout-btn:hover {
-            background: #ec489a;
+        .sidebar-menu-item:hover {
+            background: rgba(232, 58, 107, 0.1);
+            color: #e83a6b;
         }
 
-        /* Main Container */
-        .container {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 1.5rem;
-            padding: 1.5rem;
-            max-width: 1400px;
-            margin: 0 auto;
+        .sidebar-menu-item.active {
+            background: linear-gradient(135deg, rgba(232, 58, 107, 0.15), rgba(176, 59, 139, 0.1));
+            color: #e83a6b;
+            border-left: 3px solid #e83a6b;
         }
 
-        /* Sidebar */
-        .sidebar {
-            background: rgba(255, 255, 255, 0.08);
+        .sidebar-menu-item i {
+            width: 28px;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid rgba(232, 58, 107, 0.1);
+        }
+
+        .logout-sidebar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: #ef4444;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .logout-sidebar:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* ========== TOP BAR WITH PROFILE ========== */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 260px;
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            border-bottom: 1px solid rgba(232, 58, 107, 0.12);
+            z-index: 999;
         }
 
-        .sidebar h3 {
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 40px;
+            background: rgba(232, 58, 107, 0.08);
+            transition: all 0.3s;
+        }
+
+        .profile-trigger:hover {
+            background: rgba(232, 58, 107, 0.15);
+        }
+
+        .profile-avatar-small {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e83a6b, #b03b8b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .profile-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #2a1a2e;
+        }
+
+        /* ========== PROFILE SLIDEOVER ========== */
+        .profile-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 30px rgba(0, 0, 0, 0.1);
+            z-index: 2000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .profile-overlay.open {
+            transform: translateX(0);
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #e83a6b, #b03b8b);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+            color: #e83a6b;
+        }
+
+        .profile-header h3 {
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-header p {
+            opacity: 0.9;
+            font-size: 0.85rem;
+        }
+
+        .close-profile {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f0e0e8;
+        }
+
+        .profile-section h4 {
+            color: #e83a6b;
             margin-bottom: 1rem;
             font-size: 1rem;
-            color: #ec489a;
         }
 
-        .metric-card {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 0.75rem;
-            padding: 1rem;
+        .quote-card {
+            background: linear-gradient(135deg, #fff5f7, #fff0f5);
+            padding: 1.2rem;
+            border-radius: 1rem;
+            text-align: center;
             margin-bottom: 1rem;
+        }
+
+        .quote-text {
+            font-size: 0.9rem;
+            color: #5a3e4b;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .quote-author {
+            font-size: 0.7rem;
+            color: #e83a6b;
+            font-weight: 500;
+        }
+
+        .consultation-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #f0e0e8;
+        }
+
+        .consultation-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e83a6b, #b03b8b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .consultation-info {
+            flex: 1;
+        }
+
+        .consultation-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .consultation-date {
+            font-size: 0.7rem;
+            color: #a47288;
+        }
+
+        .consultation-status {
+            font-size: 0.7rem;
+            color: #10b981;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 260px;
+            margin-top: 65px;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            border: 1px solid rgba(232, 58, 107, 0.08);
             text-align: center;
         }
 
-        .metric-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ec489a;
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #e83a6b;
         }
 
-        .metric-label {
-            font-size: 0.8rem;
-            color: #a1a1aa;
-            margin-top: 0.25rem;
+        .stat-label {
+            color: #6b4c60;
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            font-size: 0.8rem;
-        }
-
-        th, td {
-            padding: 0.5rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        th {
-            color: #ec489a;
-        }
-
-        /* Main Card */
         .main-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 1rem;
             padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(232, 58, 107, 0.12);
+            margin-bottom: 1.5rem;
         }
 
         .main-card h2 {
             margin-bottom: 0.5rem;
+            font-size: 1.3rem;
         }
 
         .main-card p {
-            color: #a1a1aa;
-            margin-bottom: 1.5rem;
+            color: #6b4c60;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
         }
 
-        /* Input Grid */
         .inputs-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -154,107 +367,79 @@
 
         .input-group label {
             font-size: 0.8rem;
-            color: #a1a1aa;
+            color: #6b4c60;
             font-weight: 500;
         }
 
         .input-group input {
             padding: 0.75rem;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: white;
+            border: 1px solid rgba(232, 58, 107, 0.2);
             border-radius: 0.5rem;
-            color: white;
-            font-size: 0.9rem;
-            transition: all 0.3s;
         }
 
-        .input-group input:focus {
-            outline: none;
-            border-color: #ec489a;
-            background: rgba(236, 72, 153, 0.1);
-        }
-
-        /* Predict Button */
-        .predict-btn {
+        .btn-primary {
             width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #ec489a, #8b5cf6);
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #e83a6b, #b03b8b);
             border: none;
             border-radius: 0.5rem;
             color: white;
-            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.2s;
         }
 
-        .predict-btn:hover {
+        .btn-primary:hover {
             transform: translateY(-2px);
         }
 
-        /* Result Section */
-        .result-section {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            text-align: center;
-            animation: fadeIn 0.5s ease;
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            background: white;
+            border: 1px solid #e83a6b;
+            border-radius: 2rem;
+            color: #e83a6b;
+            cursor: pointer;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .result-section {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            border-radius: 1rem;
+            text-align: center;
         }
 
         .result-high {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+            background: rgba(239, 68, 68, 0.15);
             border: 2px solid #ef4444;
         }
 
         .result-mid {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1));
+            background: rgba(245, 158, 11, 0.15);
             border: 2px solid #f59e0b;
         }
 
         .result-low {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+            background: rgba(16, 185, 129, 0.15);
             border: 2px solid #10b981;
         }
 
         .probability {
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 0.5rem 0;
+            font-size: 2rem;
+            font-weight: 800;
         }
 
-        .risk-level {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .message {
-            color: #d4d4d8;
-            font-size: 0.9rem;
-        }
-
-        .confidence {
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-            color: #a1a1aa;
-        }
-
-        /* Loading Spinner */
         .loading {
             text-align: center;
             padding: 2rem;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(236, 72, 153, 0.3);
-            border-top-color: #ec489a;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(232, 58, 107, 0.2);
+            border-top-color: #e83a6b;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 1rem;
@@ -264,338 +449,1135 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Login Section */
-        .login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .login-box {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 1rem;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 0.75rem;
-            margin: 0.5rem 0;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            color: white;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 0.75rem;
-            margin-top: 1rem;
-            background: linear-gradient(135deg, #ec489a, #8b5cf6);
-            border: none;
-            border-radius: 0.5rem;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .error-msg {
-            color: #ef4444;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-        }
-
         .hidden {
             display: none;
         }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(232, 58, 107, 0.15);
+        }
+
+        .data-table th {
+            color: #e83a6b;
+        }
+
+        .risk-high { color: #ef4444; font-weight: bold; }
+        .risk-mid { color: #f59e0b; }
+        .risk-low { color: #10b981; }
+
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .doctor-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(232, 58, 107, 0.1);
+        }
+
+        .doctor-header {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .doctor-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e83a6b, #b03b8b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .two-column-layout {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .right-sidebar {
+            width: 280px;
+        }
+
+        /* Analytics Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(232, 58, 107, 0.1);
+        }
+        
+        .chart-container h3 {
+            color: #e83a6b;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        canvas {
+            max-height: 300px;
+        }
+        
+        .risk-distribution {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f0f4;
+            border-radius: 0.8rem;
+        }
+        
+        .risk-stat {
+            text-align: center;
+        }
+        
+        .risk-stat .count {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .risk-stat .label {
+            font-size: 0.7rem;
+            color: #6b4c60;
+        }
+        
+        .risk-stat.high .count { color: #ef4444; }
+        .risk-stat.mid .count { color: #f59e0b; }
+        .risk-stat.low .count { color: #10b981; }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+        }
+        body.dark-mode .sidebar-nav {
+            background: rgba(30, 30, 46, 0.95);
+            border-right-color: rgba(232, 58, 107, 0.3);
+        }
+        body.dark-mode .sidebar-menu-item {
+            color: #ccc;
+        }
+        body.dark-mode .sidebar-menu-item.active {
+            background: rgba(232, 58, 107, 0.2);
+        }
+        body.dark-mode .main-card,
+        body.dark-mode .stat-card,
+        body.dark-mode .chart-container,
+        body.dark-mode .doctor-card {
+            background: rgba(30, 30, 46, 0.85);
+            border-color: rgba(232, 58, 107, 0.2);
+            color: #eee;
+        }
+        body.dark-mode .input-group input {
+            background: #2a2a3e;
+            color: #eee;
+            border-color: rgba(232, 58, 107, 0.3);
+        }
+        body.dark-mode .profile-overlay {
+            background: #1a1a2e;
+        }
+        body.dark-mode .profile-section {
+            border-bottom-color: rgba(232, 58, 107, 0.2);
+        }
+        body.dark-mode .quote-card {
+            background: linear-gradient(135deg, #2a2a3e, #1a1a2e);
+        }
+        body.dark-mode .data-table th,
+        body.dark-mode .data-table td {
+            border-bottom-color: rgba(232, 58, 107, 0.2);
+        }
+        body.dark-mode .risk-distribution {
+            background: #2a2a3e;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-nav { width: 70px; }
+            .sidebar-logo span, .sidebar-menu-item span { display: none; }
+            .top-bar { left: 70px; }
+            .main-content { margin-left: 70px; margin-top: 65px; padding: 1rem; }
+            .profile-overlay { width: 100%; }
+            .two-column-layout { flex-direction: column; }
+            .right-sidebar { width: 100%; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+        /* Force Seminars Tab to be visible */
+#seminarsTab {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 10;
+}
+
+.main-content {
+    overflow-y: auto;
+    height: calc(100vh - 65px);
+}
     </style>
 </head>
 <body>
 
-<div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-        <h2>🔬 OncoSense AI</h2>
-        <p style="margin: 1rem 0; color: #a1a1aa;">Login to access dashboard</p>
-        <input type="text" id="loginUsername" placeholder="Username" value="demo">
-        <input type="password" id="loginPassword" placeholder="Password" value="demo123">
-        <div id="loginError" class="error-msg hidden"></div>
-        <button class="login-btn" onclick="login()">Login</button>
-        <p style="margin-top: 1rem; font-size: 0.8rem; color: #71717a;">
-            Demo: demo / demo123
-        </p>
+<!-- ========== LEFT SIDEBAR ========== -->
+<aside class="sidebar-nav">
+    <div class="sidebar-logo">
+        <img src="/images/logo.png" alt="OncoSense AI" onerror="this.src='https://placehold.co/45x45?text=O'">
+        <span>OncoSense AI</span>
+    </div>
+    <div class="sidebar-menu">
+        <div class="sidebar-menu-item active" data-tab="dashboard"><i>🏠</i> <span>Dashboard</span></div>
+        <div class="sidebar-menu-item" data-tab="history"><i>📋</i> <span>History</span></div>
+        <div class="sidebar-menu-item" data-tab="analytics"><i>📊</i> <span>Analytics</span></div>
+        <div class="sidebar-menu-item" data-tab="doctors"><i>👨‍⚕️</i> <span>Doctors</span></div>
+        <div class="sidebar-menu-item" data-tab="donate"><i>🎗️</i> <span>Donate</span></div>
+        <div class="sidebar-menu-item" data-tab="seminars"><i>🎤</i> <span>Seminars</span></div>
+    </div>
+    <div class="sidebar-footer">
+        <div class="logout-sidebar" onclick="logout()"><i>🚪</i> <span>Logout</span></div>
+    </div>
+</aside>
+
+<!-- ========== TOP BAR WITH PROFILE ========== -->
+<div class="top-bar">
+    <div style="display: flex; gap: 1rem; align-items-center; margin-right: auto;">
+        <button onclick="toggleDarkMode()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0.4rem 0.8rem; border-radius: 40px;">🌙</button>
+    </div>
+    <div class="profile-trigger" onclick="toggleProfile()">
+        <div class="profile-avatar-small" id="profileAvatar">D</div>
+        <span class="profile-name" id="profileNameDisplay">Guest</span>
+        <span style="font-size: 0.8rem;">▼</span>
     </div>
 </div>
 
-<div id="dashboardContent" class="hidden">
-    <div class="header">
-        <div class="logo">🔬 OncoSense AI</div>
-        <div class="user-info">
-            <span>👤 <span id="usernameDisplay"></span></span>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+<!-- ========== PROFILE SLIDE-OVER PANEL ========== -->
+<div id="profilePanel" class="profile-overlay">
+    <div class="profile-header">
+        <button class="close-profile" onclick="toggleProfile()">✕</button>
+        <div class="profile-avatar-large" id="profileLargeAvatar">👤</div>
+        <h3 id="profileFullName">Guest User</h3>
+        <p id="profileEmailAddress">guest@oncosense.ai</p>
+        <p>Member since 2024</p>
+    </div>
+    <div class="profile-section">
+        <h4>📊 Your Activity</h4>
+        <div style="display: flex; gap: 1rem; justify-content: space-around;">
+            <div style="text-align: center;"><div style="font-size: 1.5rem; font-weight: bold; color: #e83a6b;" id="profileTotalPred">0</div><div style="font-size: 0.7rem;">Predictions</div></div>
+            <div style="text-align: center;"><div style="font-size: 1.5rem; font-weight: bold; color: #f59e0b;" id="profileHighRisk">0</div><div style="font-size: 0.7rem;">High Risk</div></div>
+            <div style="text-align: center;"><div style="font-size: 1.5rem; font-weight: bold; color: #10b981;" id="profileAvgRisk">0%</div><div style="font-size: 0.7rem;">Avg Risk</div></div>
+        </div>
+    </div>
+    <div class="profile-section">
+        <h4>💝 Daily Motivation</h4>
+        <div id="quoteContainer"><div class="quote-card"><div class="quote-text">"The best protection is early detection. You are stronger than you know."</div><div class="quote-author">— Breast Cancer Awareness</div></div></div>
+    </div>
+    <div class="profile-section">
+        <h4>👨‍⚕️ Doctor Consultations</h4>
+        <div id="consultationsList"><div style="padding: 1rem; text-align: center; color: #a47288;">No consultations yet. Connect with a doctor from the Doctors tab.</div></div>
+    </div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<main class="main-content">
+    <!-- Dashboard Tab -->
+    <div id="dashboardTab" class="tab-content active">
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-value">97.1%</div><div class="stat-label">Test Accuracy</div></div>
+            <div class="stat-card"><div class="stat-value">99.0%</div><div class="stat-label">ROC-AUC Score</div></div>
+            <div class="stat-card"><div class="stat-value">569</div><div class="stat-label">Samples</div></div>
+            <div class="stat-card"><div class="stat-value">30</div><div class="stat-label">Features</div></div>
+        </div>
+
+        <div class="two-column-layout">
+            <div style="flex:1">
+                <div class="main-card">
+                    <h2>🔬 Run a Prediction</h2>
+                    <p>Enter 9 key cell nucleus measurements from FNA biopsy</p>
+                    <div class="inputs-grid">
+                        <div class="input-group"><label>Concave Points (Worst)</label><input type="number" id="concave_points_worst" step="0.01" placeholder="e.g., 0.08"></div>
+                        <div class="input-group"><label>Radius (Worst)</label><input type="number" id="radius_worst" step="1" placeholder="e.g., 14"></div>
+                        <div class="input-group"><label>Area (Worst)</label><input type="number" id="area_worst" step="50" placeholder="e.g., 600"></div>
+                        <div class="input-group"><label>Concave Points (Mean)</label><input type="number" id="concave_points_mean" step="0.01" placeholder="e.g., 0.05"></div>
+                        <div class="input-group"><label>Perimeter (Worst)</label><input type="number" id="perimeter_worst" step="5" placeholder="e.g., 90"></div>
+                        <div class="input-group"><label>Concavity (Mean)</label><input type="number" id="concavity_mean" step="0.01" placeholder="e.g., 0.088"></div>
+                        <div class="input-group"><label>Texture (Worst)</label><input type="number" id="texture_worst" step="1" placeholder="e.g., 22"></div>
+                        <div class="input-group"><label>Smoothness (Worst)</label><input type="number" id="smoothness_worst" step="0.01" placeholder="e.g., 0.12"></div>
+                        <div class="input-group"><label>Symmetry (Worst)</label><input type="number" id="symmetry_worst" step="0.01" placeholder="e.g., 0.29"></div>
+                    </div>
+                    <button class="btn-primary" onclick="predict()">🔬 Analyze & Predict</button>
+                    <div id="resultSection" class="result-section hidden"></div>
+                    <div id="reportButton" class="hidden" style="text-align: center; margin-top: 1rem;">
+                        <button class="btn-primary" onclick="downloadReport()" style="width: auto; padding: 0.5rem 1.5rem;">📄 Download Report</button>
+                    </div>
+                    <div id="loadingSection" class="loading hidden"><div class="spinner"></div><p>Analyzing...</p></div>
+                </div>
+            </div>
+            <div class="right-sidebar">
+                <div class="main-card">
+                    <h3>📊 Threshold Performance</h3>
+                    <table style="width:100%"><thead><tr><th>Threshold</th><th>Sens.</th><th>Spec.</th></tr></thead>
+                    <tbody><tr><td>0.5</td><td>93.8%</td><td>99.1%</td></tr>
+                    <tr><td>0.3</td><td>96.9%</td><td>97.2%</td></tr>
+                    <tr><td>0.2</td><td>98.4%</td><td>91.6%</td></tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="container">
-        <aside class="sidebar">
-            <h3>📊 Model Performance</h3>
-            <div class="metric-card">
-                <div class="metric-value" id="accuracy">97.1%</div>
-                <div class="metric-label">Test Accuracy</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-value" id="rocAuc">99.0%</div>
-                <div class="metric-label">ROC-AUC Score</div>
+    <!-- History Tab -->
+    <div id="historyTab" class="tab-content">
+        <div class="main-card"><h2>📋 Prediction History</h2><div id="historyContent"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div></div>
+    </div>
+
+    <!-- Analytics Tab with Charts -->
+    <div id="analyticsTab" class="tab-content">
+        <div class="main-card">
+            <h2>📊 Analytics Overview</h2>
+            <p>Your breast cancer risk prediction insights based on your prediction history</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value" id="analyticsTotal">0</div><div class="stat-label">Total Predictions</div></div>
+                <div class="stat-card"><div class="stat-value" id="analyticsHighRisk">0</div><div class="stat-label">High Risk Alerts</div></div>
+                <div class="stat-card"><div class="stat-value" id="analyticsAvgRisk">0%</div><div class="stat-label">Average Risk Score</div></div>
+                <div class="stat-card"><div class="stat-value" id="analyticsAccuracy">97.1%</div><div class="stat-label">Model Accuracy</div></div>
             </div>
             
-            <h3 style="margin-top: 1.5rem;">📈 Threshold Performance</h3>
-            <table>
-                <thead>
-                    <tr><th>Threshold</th><th>Sens.</th><th>Spec.</th></tr>
-                </thead>
-                <tbody id="thresholdsTable">
-                    <tr><td>0.5</td><td>93.8%</td><td>99.1%</td></tr>
-                    <tr><td>0.3</td><td>96.9%</td><td>97.2%</td></tr>
-                    <tr><td>0.2</td><td>98.4%</td><td>91.6%</td></tr>
-                </tbody>
-            </table>
-
-            <h3 style="margin-top: 1.5rem;">🧬 Dataset Info</h3>
-            <div class="metric-card">
-                <div class="metric-value">569</div>
-                <div class="metric-label">Samples</div>
+            <div class="risk-distribution">
+                <div class="risk-stat high"><div class="count" id="riskHighCount">0</div><div class="label">High Risk</div></div>
+                <div class="risk-stat mid"><div class="count" id="riskMidCount">0</div><div class="label">Moderate Risk</div></div>
+                <div class="risk-stat low"><div class="count" id="riskLowCount">0</div><div class="label">Low Risk</div></div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value">30</div>
-                <div class="metric-label">Features</div>
+            
+            <div class="charts-grid">
+                <div class="chart-container"><h3>📈 Risk Trend Over Time</h3><canvas id="riskTrendChart"></canvas></div>
+                <div class="chart-container"><h3>🥧 Risk Level Distribution</h3><canvas id="riskDistributionChart"></canvas></div>
+                <div class="chart-container"><h3>📊 Model Performance</h3><canvas id="performanceChart"></canvas></div>
+                <div class="chart-container"><h3>🔥 Monthly Activity</h3><canvas id="monthlyActivityChart"></canvas></div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value">100</div>
-                <div class="metric-label">Decision Trees</div>
+        </div>
+    </div>
+
+    <!-- Doctors Tab -->
+    <div id="doctorsTab" class="tab-content">
+        <div class="main-card"><h2>👨‍⚕️ Recommended Oncologists</h2><div class="doctors-grid" id="doctorsGrid"></div></div>
+    </div>
+
+    <!-- Donate Tab -->
+    <div id="donateTab" class="tab-content">
+        <div class="main-card"><h2>🎗️ Support Breast Cancer Awareness</h2><div style="display:flex; gap:0.5rem; justify-content:center; margin:1rem 0;"><button class="btn-small" onclick="openDonate(100)">₹100</button><button class="btn-small" onclick="openDonate(500)">₹500</button><button class="btn-small" onclick="openDonate(1000)">₹1000</button></div><button class="btn-primary" onclick="openDonate()">Donate Now ❤️</button></div>
+    </div>
+
+<!-- Seminars Tab -->
+<div id="seminarsTab" class="tab-content">
+    <!-- UPCOMING SEMINARS -->
+<div class="main-card">
+    <h2>📅 Upcoming Seminars</h2>
+    <div class="doctors-grid">
+        <div class="doctor-card">
+            <div class="doctor-header">
+                <div class="doctor-avatar">🎗️</div>
+                <div><div class="doctor-name">Breast Cancer Early Detection Seminar</div><div class="doctor-specialty">Organized by OncoSense AI</div></div>
             </div>
-        </aside>
-
-        <main>
-            <div class="main-card">
-                <h2>🔬 Run a Prediction</h2>
-                <p>Enter 9 key cell nucleus measurements from FNA biopsy (Fine Needle Aspirate)</p>
-
-                <div class="inputs-grid">
-                    <div class="input-group">
-                        <label>🔴 Concave Points (Worst) [0-0.3]</label>
-                        <input type="number" id="concave_points_worst" step="0.01" value="0.08">
-                    </div>
-                    <div class="input-group">
-                        <label>📏 Radius (Worst) [5-30]</label>
-                        <input type="number" id="radius_worst" step="1" value="14">
-                    </div>
-                    <div class="input-group">
-                        <label>📐 Area (Worst) [200-2500]</label>
-                        <input type="number" id="area_worst" step="50" value="600">
-                    </div>
-                    <div class="input-group">
-                        <label>🔴 Concave Points (Mean) [0-0.2]</label>
-                        <input type="number" id="concave_points_mean" step="0.01" value="0.05">
-                    </div>
-                    <div class="input-group">
-                        <label>📏 Perimeter (Worst) [50-200]</label>
-                        <input type="number" id="perimeter_worst" step="5" value="90">
-                    </div>
-                    <div class="input-group">
-                        <label>🔴 Concavity (Mean) [0-0.4]</label>
-                        <input type="number" id="concavity_mean" step="0.01" value="0.088">
-                    </div>
-                    <div class="input-group">
-                        <label>🎨 Texture (Worst) [10-40]</label>
-                        <input type="number" id="texture_worst" step="1" value="22">
-                    </div>
-                    <div class="input-group">
-                        <label>✨ Smoothness (Worst) [0.05-0.2]</label>
-                        <input type="number" id="smoothness_worst" step="0.01" value="0.12">
-                    </div>
-                    <div class="input-group">
-                        <label>🔄 Symmetry (Worst) [0.1-0.4]</label>
-                        <input type="number" id="symmetry_worst" step="0.01" value="0.29">
-                    </div>
-                </div>
-
-                <button class="predict-btn" onclick="predict()">
-                    🔬 Analyze & Predict Cancer Risk
-                </button>
-
-                <div id="resultSection" class="result-section hidden"></div>
-                <div id="loadingSection" class="loading hidden">
-                    <div class="spinner"></div>
-                    <p>Analyzing cell morphology with AI...</p>
-                </div>
+            <p>📍 Vadodara, Gujarat</p>
+            <p>📅 25 May 2026</p>
+            <p>🕒 11:00 AM</p>
+            <p>👩‍⚕️ Guest: Dr. Priya Sharma</p>
+            <button class="btn-primary" onclick="registerSeminar('Breast Cancer Early Detection Seminar')" style="margin-top:0.8rem;">📝 Register Now</button>
+        </div>
+        <div class="doctor-card">
+            <div class="doctor-header">
+                <div class="doctor-avatar">🤖</div>
+                <div><div class="doctor-name">AI in Breast Cancer Screening</div><div class="doctor-specialty">Organized by AI Health India</div></div>
             </div>
-
-            <div class="main-card" style="margin-top: 1.5rem;">
-                <h3>📖 How It Works</h3>
-                <p style="font-size: 0.85rem; line-height: 1.6;">
-                    The model uses a <strong>Random Forest classifier with 100 decision trees</strong> trained on 
-                    <strong>569 biopsy samples</strong> from the UCI Wisconsin Breast Cancer Dataset. 
-                    It analyzes 30 morphological features (radius, texture, perimeter, area, smoothness, 
-                    compactness, concavity, concave points, symmetry, fractal dimension - each measured as 
-                    mean, standard error, and worst value).
-                </p>
-                <p style="font-size: 0.8rem; color: #f59e0b; margin-top: 1rem;">
-                    ⚠️ <strong>Medical Disclaimer:</strong> This is a research prototype. Not FDA-approved. 
-                    Not for clinical decisions. Always consult a qualified medical professional.
-                </p>
-            </div>
-        </main>
+            <p>📍 Ahmedabad (Online)</p>
+            <p>📅 28 May 2026</p>
+            <p>🕒 10:30 AM</p>
+            <p>👨‍⚕️ Guest: Dr. Michael Chen</p>
+            <button class="btn-primary" onclick="registerSeminar('AI in Breast Cancer Screening')" style="margin-top:0.8rem;">📝 Register Now</button>
+        </div>
     </div>
 </div>
 
+<!-- LIVE NOW -->
+<div class="main-card">
+    <h2>🔴 Currently Live</h2>
+    <div class="doctors-grid">
+        <div class="doctor-card" style="border: 2px solid #10b981;">
+            <div class="doctor-header">
+                <div class="doctor-avatar">🔴</div>
+                <div><div class="doctor-name">Survivor Stories & Self-Examination</div><div class="doctor-specialty" style="color:#10b981;">LIVE NOW</div></div>
+            </div>
+            <p>📍 Online Webinar</p>
+            <p>🕒 02:00 PM</p>
+            <p>👩‍⚕️ Guest: Ms. Sarah Johnson (Survivor)</p>
+            <button class="btn-primary" onclick="window.open('https://meet.google.com', '_blank')" style="margin-top:0.8rem; background:#10b981;">▶️ Join Live Session</button>
+        </div>
+    </div>
+</div>
+
+<!-- PAST SEMINARS -->
+<div class="main-card">
+    <h2>📜 Past Seminars (Last 30 Days)</h2>
+    <div class="doctors-grid">
+        <div class="doctor-card">
+            <div class="doctor-header"><div class="doctor-avatar">📋</div><div><div class="doctor-name">Breast Health Awareness Camp</div></div></div>
+            <p>📍 Mumbai</p><p>📅 15 April 2026</p><p>👩‍⚕️ Guest: Dr. Emily Rodriguez</p>
+        </div>
+        <div class="doctor-card">
+            <div class="doctor-header"><div class="doctor-avatar">📋</div><div><div class="doctor-name">Women's Health & Wellness Summit</div></div></div>
+            <p>📍 Delhi</p><p>📅 10 April 2026</p><p>👨‍⚕️ Guest: Dr. David Kim</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Donation Modal -->
+<div id="donationModal" class="modal">
+    <div class="modal-content">
+        <h3>🎗️ Complete Donation</h3>
+        <input type="text" id="donorName" placeholder="Full name" style="width:100%; margin:0.5rem 0; padding:0.5rem;">
+        <input type="email" id="donorEmail" placeholder="Email" style="width:100%; margin:0.5rem 0; padding:0.5rem;">
+        <input type="number" id="donorAmount" placeholder="Amount (₹)" style="width:100%; margin:0.5rem 0; padding:0.5rem;">
+        <textarea id="donorMessage" placeholder="Message" style="width:100%; margin:0.5rem 0; padding:0.5rem;"></textarea>
+        <div class="modal-buttons">
+            <button class="btn-small" onclick="closeDonateModal()">Cancel</button>
+            <button class="btn-primary" onclick="processDonation()" style="width:auto; padding:0.5rem 1rem;">Donate</button>
+        </div>
+    </div>
+</div>
+          <!-- Registration Modal for Seminars -->
+<div id="registrationModal" class="modal">
+    <div class="modal-content">
+        <h3>📝 Seminar Registration</h3>
+        <input type="text" id="registerSeminarName" placeholder="Full Name" style="width:100%; margin:0.5rem 0; padding:0.5rem;">
+        <input type="email" id="registerSeminarEmail" placeholder="Email" style="width:100%; margin:0.5rem 0; padding:0.5rem;">
+        <input type="tel" id="registerSeminarPhone" placeholder="Phone Number" style="width:100%; margin:0.5rem 0; padding:0.5rem;">
+        <div class="modal-buttons">
+            <button class="btn-small" onclick="closeRegistrationModal()">Cancel</button>
+            <button class="btn-primary" onclick="submitRegistration()" style="width:auto; padding:0.5rem 1rem;">Register</button>
+        </div>
+    </div>
+</div>
+        
+
 <script>
-    let authToken = null;
-
-    // Check if already logged in
-    const savedToken = localStorage.getItem('token');
-    const savedUsername = localStorage.getItem('username');
-    if (savedToken && savedUsername) {
-        authToken = savedToken;
-        document.getElementById('loginOverlay').classList.add('hidden');
-        document.getElementById('dashboardContent').classList.remove('hidden');
-        document.getElementById('usernameDisplay').textContent = savedUsername;
+    // ========== DATA MANAGEMENT ==========
+    function getPredictions() {
+        const predictions = localStorage.getItem('oncosense_predictions');
+        return predictions ? JSON.parse(predictions) : [];
     }
-
-    async function login() {
-        const username = document.getElementById('loginUsername').value;
-        const password = document.getElementById('loginPassword').value;
-        const errorDiv = document.getElementById('loginError');
-        
-        errorDiv.classList.add('hidden');
-        
-        try {
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-            
-            const data = await res.json();
-            
-            if (res.ok) {
-                authToken = data.token;
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('username', data.username);
-                document.getElementById('loginOverlay').classList.add('hidden');
-                document.getElementById('dashboardContent').classList.remove('hidden');
-                document.getElementById('usernameDisplay').textContent = data.username;
-            } else {
-                errorDiv.textContent = data.detail || 'Login failed';
-                errorDiv.classList.remove('hidden');
-            }
-        } catch (err) {
-            errorDiv.textContent = 'Connection error. Make sure server is running.';
-            errorDiv.classList.remove('hidden');
+    
+    function savePredictions(predictions) {
+        // Keep only last 20 predictions
+        if (predictions.length > 20) {
+            predictions = predictions.slice(0, 20);
+        }
+        localStorage.setItem('oncosense_predictions', JSON.stringify(predictions));
+    }
+    
+    // Calculate risk score based on inputs
+    function calculateRiskScore(data) {
+        let score = 0;
+        if (data.concave_points_worst > 0.1) score += 25;
+        if (data.radius_worst > 15) score += 20;
+        if (data.area_worst > 700) score += 20;
+        if (data.concave_points_mean > 0.08) score += 15;
+        if (data.perimeter_worst > 100) score += 10;
+        if (data.concavity_mean > 0.1) score += 10;
+        score = Math.min(98, Math.max(5, score));
+        return score;
+    }
+    
+    function getRiskLevel(score) {
+        if (score > 65) return 'High Risk';
+        if (score > 35) return 'Moderate Risk';
+        return 'Low Risk';
+    }
+    
+    function getMessage(score) {
+        if (score > 65) return '⚠️ Based on your measurements, there is elevated risk. Please consult with an oncologist soon.';
+        if (score > 35) return '⚠️ Based on your measurements, there is moderate risk. Monitor your health and consult a doctor.';
+        return '✅ Based on your measurements, the risk appears low. Continue regular checkups.';
+    }
+    
+    // Chart instances
+    let riskTrendChart, riskDistributionChart, performanceChart, monthlyActivityChart;
+    
+    // ========== CLEAR HISTORY ==========
+    function clearHistory() {
+        if (confirm('Are you sure you want to delete all prediction history? This cannot be undone.')) {
+            localStorage.removeItem('oncosense_predictions');
+            loadHistory();
+            updateAnalytics();
+            alert('✅ History cleared successfully!');
         }
     }
-
-    async function logout() {
-        if (authToken) {
-            try {
-                await fetch('/api/auth/logout', {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-            } catch (err) {}
+    
+    // ========== LOAD HISTORY ==========
+    function loadHistory() {
+        const predictions = getPredictions();
+        const container = document.getElementById('historyContent');
+        
+        if (predictions.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:2rem;">No predictions yet. Make your first prediction above.</p>';
+            return;
         }
-        authToken = null;
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        document.getElementById('loginOverlay').classList.remove('hidden');
-        document.getElementById('dashboardContent').classList.add('hidden');
+        
+        let html = '<div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;"><button class="btn-small" onclick="clearHistory()" style="background: #ef4444; color: white; border: none;">🗑️ Clear All History</button></div>';
+        html += '<table class="data-table"><thead><tr><th>Date</th><th>Risk Score</th><th>Risk Level</th><th>Recommendation</th></tr></thead><tbody>';
+        predictions.forEach(p => {
+            let cls = p.risk_level === 'High Risk' ? 'risk-high' : (p.risk_level === 'Moderate Risk' ? 'risk-mid' : 'risk-low');
+            html += `<tr>
+                <td>${p.date}</td>
+                <td class="${cls}">${p.risk_score}%</td>
+                <td class="${cls}">${p.risk_level}</td>
+                <td style="font-size:0.75rem;">${p.message.substring(0, 60)}...</td>
+            </tr>`;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        
+        // Update profile stats
+        document.getElementById('profileTotalPred').textContent = predictions.length;
+        const highRiskCount = predictions.filter(p => p.risk_level === 'High Risk').length;
+        document.getElementById('profileHighRisk').textContent = highRiskCount;
+        const avgRisk = predictions.length ? predictions.reduce((s,p) => s + p.risk_score, 0) / predictions.length : 0;
+        document.getElementById('profileAvgRisk').textContent = avgRisk.toFixed(1) + '%';
     }
-
+    
+    // ========== UPDATE ANALYTICS ==========
+    function updateAnalytics() {
+        const predictions = getPredictions();
+        
+        if (predictions.length === 0) {
+            document.getElementById('analyticsTotal').textContent = '0';
+            document.getElementById('analyticsHighRisk').textContent = '0';
+            document.getElementById('analyticsAvgRisk').textContent = '0%';
+            document.getElementById('riskHighCount').textContent = '0';
+            document.getElementById('riskMidCount').textContent = '0';
+            document.getElementById('riskLowCount').textContent = '0';
+            return;
+        }
+        
+        const total = predictions.length;
+        const highRisk = predictions.filter(p => p.risk_level === 'High Risk').length;
+        const midRisk = predictions.filter(p => p.risk_level === 'Moderate Risk').length;
+        const lowRisk = predictions.filter(p => p.risk_level === 'Low Risk').length;
+        const avgRisk = predictions.reduce((s,p) => s + p.risk_score, 0) / total;
+        
+        document.getElementById('analyticsTotal').textContent = total;
+        document.getElementById('analyticsHighRisk').textContent = highRisk;
+        document.getElementById('analyticsAvgRisk').textContent = avgRisk.toFixed(1) + '%';
+        document.getElementById('riskHighCount').textContent = highRisk;
+        document.getElementById('riskMidCount').textContent = midRisk;
+        document.getElementById('riskLowCount').textContent = lowRisk;
+        
+        updateCharts(predictions);
+    }
+    
+    function updateCharts(predictions) {
+        if (predictions.length === 0) return;
+        
+        const sortedPredictions = [...predictions].sort((a,b) => new Date(a.date) - new Date(b.date));
+        
+        // Risk Trend Chart
+        const dates = sortedPredictions.map(p => {
+            const d = new Date(p.date);
+            return `${d.getMonth()+1}/${d.getDate()}`;
+        });
+        const scores = sortedPredictions.map(p => p.risk_score);
+        
+        if (riskTrendChart) riskTrendChart.destroy();
+        riskTrendChart = new Chart(document.getElementById('riskTrendChart'), {
+            type: 'line',
+            data: { labels: dates, datasets: [{ label: 'Risk Score (%)', data: scores, borderColor: '#e83a6b', backgroundColor: 'rgba(232,58,107,0.1)', tension: 0.3, fill: true, pointBackgroundColor: '#e83a6b', pointRadius: 5 }] },
+            options: { responsive: true, maintainAspectRatio: true, scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: 'Risk Score (%)' } } } }
+        });
+        
+        // Risk Distribution Pie Chart
+        const highCount = predictions.filter(p => p.risk_level === 'High Risk').length;
+        const midCount = predictions.filter(p => p.risk_level === 'Moderate Risk').length;
+        const lowCount = predictions.filter(p => p.risk_level === 'Low Risk').length;
+        
+        if (riskDistributionChart) riskDistributionChart.destroy();
+        riskDistributionChart = new Chart(document.getElementById('riskDistributionChart'), {
+            type: 'doughnut',
+            data: { labels: ['High Risk', 'Moderate Risk', 'Low Risk'], datasets: [{ data: [highCount, midCount, lowCount], backgroundColor: ['#ef4444', '#f59e0b', '#10b981'], borderWidth: 0 }] },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+        
+        // Model Performance (static)
+        if (performanceChart) performanceChart.destroy();
+        performanceChart = new Chart(document.getElementById('performanceChart'), {
+            type: 'radar',
+            data: { labels: ['Sensitivity', 'Specificity', 'Precision', 'Accuracy', 'ROC-AUC'], datasets: [{ label: 'Model Performance (%)', data: [93.8, 99.1, 96.5, 97.1, 99.0], backgroundColor: 'rgba(232,58,107,0.2)', borderColor: '#e83a6b', pointBackgroundColor: '#e83a6b', pointRadius: 4 }] },
+            options: { responsive: true, scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20 } } } }
+        });
+        
+        // Monthly Activity Chart
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthlyCounts = new Array(12).fill(0);
+        predictions.forEach(p => {
+            const month = new Date(p.date).getMonth();
+            monthlyCounts[month]++;
+        });
+        
+        if (monthlyActivityChart) monthlyActivityChart.destroy();
+        monthlyActivityChart = new Chart(document.getElementById('monthlyActivityChart'), {
+            type: 'bar',
+            data: { labels: monthNames, datasets: [{ label: 'Number of Predictions', data: monthlyCounts, backgroundColor: 'rgba(232,58,107,0.7)', borderRadius: 8 }] },
+            options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+        });
+    }
+    
+    // ========== PREDICT FUNCTION ==========
     async function predict() {
-        const resultSection = document.getElementById('resultSection');
-        const loadingSection = document.getElementById('loadingSection');
+        const fields = ['concave_points_worst', 'radius_worst', 'area_worst', 'concave_points_mean', 
+                        'perimeter_worst', 'concavity_mean', 'texture_worst', 'smoothness_worst', 'symmetry_worst'];
         
-        // Show loading
-        loadingSection.classList.remove('hidden');
-        resultSection.classList.add('hidden');
+        for(let f of fields) {
+            if(!document.getElementById(f).value) {
+                alert('Please fill all fields before predicting.');
+                return;
+            }
+        }
         
-        // Get input values
+        document.getElementById('loadingSection').classList.remove('hidden');
+        document.getElementById('resultSection').classList.add('hidden');
+        
         const data = {
-            concave_points_worst: parseFloat(document.getElementById('concave_points_worst').value) || 0.08,
-            radius_worst: parseFloat(document.getElementById('radius_worst').value) || 14,
-            area_worst: parseFloat(document.getElementById('area_worst').value) || 600,
-            concave_points_mean: parseFloat(document.getElementById('concave_points_mean').value) || 0.05,
-            perimeter_worst: parseFloat(document.getElementById('perimeter_worst').value) || 90,
-            concavity_mean: parseFloat(document.getElementById('concavity_mean').value) || 0.088,
-            texture_worst: parseFloat(document.getElementById('texture_worst').value) || 22,
-            smoothness_worst: parseFloat(document.getElementById('smoothness_worst').value) || 0.12,
-            symmetry_worst: parseFloat(document.getElementById('symmetry_worst').value) || 0.29
+            concave_points_worst: parseFloat(document.getElementById('concave_points_worst').value),
+            radius_worst: parseFloat(document.getElementById('radius_worst').value),
+            area_worst: parseFloat(document.getElementById('area_worst').value),
+            concave_points_mean: parseFloat(document.getElementById('concave_points_mean').value),
+            perimeter_worst: parseFloat(document.getElementById('perimeter_worst').value),
+            concavity_mean: parseFloat(document.getElementById('concavity_mean').value),
+            texture_worst: parseFloat(document.getElementById('texture_worst').value),
+            smoothness_worst: parseFloat(document.getElementById('smoothness_worst').value),
+            symmetry_worst: parseFloat(document.getElementById('symmetry_worst').value)
         };
         
-        try {
-            const res = await fetch('/api/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authToken}`
-                },
-                body: JSON.stringify(data)
-            });
+        setTimeout(() => {
+            const score = calculateRiskScore(data);
+            const riskLevel = getRiskLevel(score);
+            const message = getMessage(score);
             
-            const result = await res.json();
+            const cls = riskLevel === 'High Risk' ? 'result-high' : (riskLevel === 'Moderate Risk' ? 'result-mid' : 'result-low');
+            const txt = riskLevel === 'High Risk' ? '⚠️ HIGH RISK' : (riskLevel === 'Moderate Risk' ? '⚠️ MODERATE RISK' : '✅ LOW RISK');
             
-            if (res.ok) {
-                let riskClass = '';
-                let riskText = '';
-                
-                if (result.level === 'elevated') {
-                    riskClass = 'result-high';
-                    riskText = '⚠️ HIGH RISK';
-                } else if (result.level === 'intermediate') {
-                    riskClass = 'result-mid';
-                    riskText = '⚠️ MODERATE RISK';
-                } else {
-                    riskClass = 'result-low';
-                    riskText = '✅ LOW RISK';
-                }
-                
-                resultSection.className = `result-section ${riskClass}`;
-                resultSection.innerHTML = `
-                    <div class="probability">${result.probability_percent}%</div>
-                    <div class="risk-level">${riskText}</div>
-                    <div class="message">${result.message}</div>
-                    <div class="confidence">Based on Random Forest analysis of 30 morphological features</div>
-                `;
-                resultSection.classList.remove('hidden');
-            } else {
-                resultSection.className = 'result-section result-high';
-                resultSection.innerHTML = `<div class="message">❌ Error: ${result.detail || 'Prediction failed'}</div>`;
-                resultSection.classList.remove('hidden');
+            document.getElementById('resultSection').className = `result-section ${cls}`;
+            document.getElementById('resultSection').innerHTML = `
+                <div class="probability">${score}%</div>
+                <div style="font-weight:bold; margin:0.5rem 0;">${txt}</div>
+                <div class="message">${message}</div>
+            `;
+            document.getElementById('resultSection').classList.remove('hidden');
+            document.getElementById('loadingSection').classList.add('hidden');
+            
+            // Save prediction
+            const predictions = getPredictions();
+            const newPrediction = {
+                id: Date.now(),
+                date: new Date().toLocaleString(),
+                risk_score: score,
+                risk_level: riskLevel,
+                message: message
+            };
+            predictions.unshift(newPrediction);
+            savePredictions(predictions);
+            
+            // Save last prediction for report
+            lastPredictionData = {
+                risk_score: score,
+                risk_level: riskLevel,
+                message: message
+            };
+            document.getElementById('reportButton').classList.remove('hidden');
+            
+            loadHistory();      // Refresh history tab
+            updateAnalytics();  // Refresh analytics charts
+            
+        }, 1500);
+    }
+    
+    // ========== DOCTORS ==========
+    function loadDoctors() {
+        const doctors = [
+            { name: "Dr. Sarah Johnson", specialty: "Breast Surgical Oncologist", experience: "15+ years", hospital: "Memorial Sloan Kettering", rating: 4.9, avatar: "👩‍⚕️" },
+            { name: "Dr. Michael Chen", specialty: "Medical Oncologist", experience: "12+ years", hospital: "MD Anderson", rating: 4.8, avatar: "👨‍⚕️" },
+            { name: "Dr. Emily Rodriguez", specialty: "Radiation Oncologist", experience: "10+ years", hospital: "Johns Hopkins", rating: 4.9, avatar: "👩‍⚕️" },
+            { name: "Dr. David Kim", specialty: "Breast Cancer Specialist", experience: "18+ years", hospital: "Mayo Clinic", rating: 4.9, avatar: "👨‍⚕️" },
+            { name: "Dr. Lisa Patel", specialty: "Breast Surgical Oncologist", experience: "14+ years", hospital: "Dana-Farber", rating: 4.8, avatar: "👩‍⚕️" }
+        ];
+        
+        let consultations = JSON.parse(localStorage.getItem('consultations') || '[]');
+        
+        function updateConsultationsList() {
+            const container = document.getElementById('consultationsList');
+            if (consultations.length === 0) {
+                container.innerHTML = '<div style="padding: 1rem; text-align: center; color: #a47288;">No consultations yet. Connect with a doctor from the Doctors tab.</div>';
+                return;
             }
-        } catch (err) {
-            resultSection.className = 'result-section result-high';
-            resultSection.innerHTML = `<div class="message">❌ Connection error. Make sure server is running.</div>`;
-            resultSection.classList.remove('hidden');
-        } finally {
-            loadingSection.classList.add('hidden');
+            container.innerHTML = consultations.map(c => `<div class="consultation-item"><div class="consultation-avatar">${c.doctorIcon}</div><div class="consultation-info"><div class="consultation-name">${c.doctorName}</div><div class="consultation-date">${c.date}</div><div class="consultation-status">✅ Scheduled</div></div></div>`).join('');
+        }
+        
+        window.connectDoctor = function(doctorName) {
+            consultations.push({ doctorName, doctorIcon: doctorName.charAt(0), date: new Date().toLocaleDateString() });
+            localStorage.setItem('consultations', JSON.stringify(consultations));
+            updateConsultationsList();
+            alert(`✅ Consultation request sent to ${doctorName}`);
+        };
+        
+        let html = '';
+        doctors.forEach(doc => {
+            html += `<div class="doctor-card">
+                <div class="doctor-header"><div class="doctor-avatar">${doc.avatar}</div><div><div class="doctor-name" style="font-weight:600;">${doc.name}</div><div style="font-size:0.8rem;color:#e83a6b;">${doc.specialty}</div><div>⭐ ${doc.rating}</div></div></div>
+                <div style="font-size:0.8rem;">${doc.experience} experience</div><div style="font-size:0.8rem;">🏥 ${doc.hospital}</div>
+                <button class="btn-primary" onclick="connectDoctor('${doc.name}')" style="margin-top:0.8rem;">📞 Consult</button>
+            </div>`;
+        });
+        document.getElementById('doctorsGrid').innerHTML = html;
+        updateConsultationsList();
+    }
+    
+    // ========== DONATION ==========
+    function openDonate(amount) {
+        const m = document.getElementById('donationModal');
+        if(amount) document.getElementById('donorAmount').value = amount;
+        m.style.display = 'flex';
+    }
+    
+    function closeDonateModal() {
+        document.getElementById('donationModal').style.display = 'none';
+    }
+    
+    async function processDonation() {
+        let name = document.getElementById('donorName').value || 'Anonymous';
+        let email = document.getElementById('donorEmail').value;
+        let amount = parseFloat(document.getElementById('donorAmount').value);
+        if(!email || !amount || isNaN(amount)) {
+            alert('Please fill email and valid amount');
+            return;
+        }
+        alert(`🎗️ Thank you ${name} for ₹${amount}! Your certificate is being downloaded.`);
+        generateCertificate(name, amount);
+        closeDonateModal();
+        document.getElementById('donorName').value = '';
+        document.getElementById('donorEmail').value = '';
+        document.getElementById('donorAmount').value = '';
+        document.getElementById('donorMessage').value = '';
+    }
+    
+    // ========== PROFILE & QUOTES ==========
+    function toggleProfile() {
+        document.getElementById('profilePanel').classList.toggle('open');
+    }
+    
+    function logout(){
+
+    // remove only login data
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+
+    // redirect
+    window.location.href = '/login';
+}
+    
+    
+    const quotes = [
+        { text: "The best protection is early detection. You are stronger than you know.", author: "— Breast Cancer Awareness" },
+        { text: "Your health is an investment, not an expense.", author: "— Unknown" },
+        { text: "Early detection saves lives. Every check-up is a step toward peace of mind.", author: "— Medical Association" },
+        { text: "You have survived every difficult day so far.", author: "— Anonymous" },
+        { text: "Hope is stronger than fear.", author: "— Cancer Survivor" }
+    ];
+    let currentQuoteIndex = 0;
+    
+    function updateQuote() {
+        const qc = document.getElementById('quoteContainer');
+        if (qc) {
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            qc.innerHTML = `<div class="quote-card"><div class="quote-text">"${quotes[currentQuoteIndex].text}"</div><div class="quote-author">${quotes[currentQuoteIndex].author}</div></div>`;
         }
     }
+    setInterval(updateQuote, 10000);
+    
+    // ========== TAB SWITCHING ==========
+    document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const tabName = item.getAttribute('data-tab');
+            document.querySelectorAll('.sidebar-menu-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            
+            if (tabName === 'history') loadHistory();
+            if (tabName === 'analytics') updateAnalytics();
+            if (tabName === 'doctors') loadDoctors();
+            if (tabName === 'seminars') loadSeminars();
+        });
+    });
+    
+    // ========== DARK MODE ==========
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDark);
+        const btn = document.querySelector('.top-bar button');
+        if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+    }
+    
+    // Load dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        const btn = document.querySelector('.top-bar button');
+        if (btn) btn.textContent = '☀️';
+    }
+    
+    // ========== PDF REPORT ==========
+    let lastPredictionData = null;
+    
+    function downloadReport() {
+        if (!lastPredictionData) {
+            alert('No prediction to download. Please run a prediction first.');
+            return;
+        }
+        
+        const reportHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head><title>OncoSense AI - Medical Report</title>
+            <style>
+                body { font-family: 'Inter', sans-serif; padding: 40px; background: white; }
+                .report-container { max-width: 600px; margin: 0 auto; border: 2px solid #e83a6b; border-radius: 20px; padding: 30px; }
+                .header { text-align: center; border-bottom: 2px solid #e83a6b; padding-bottom: 20px; margin-bottom: 20px; }
+                .logo { font-size: 24px; font-weight: bold; color: #e83a6b; }
+                .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+                .label { font-weight: bold; color: #555; }
+                .risk-high { color: #ef4444; font-weight: bold; font-size: 24px; }
+                .risk-mid { color: #f59e0b; font-weight: bold; font-size: 24px; }
+                .risk-low { color: #10b981; font-weight: bold; font-size: 24px; }
+                .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #999; }
+            </style>
+            </head>
+            <body>
+                <div class="report-container">
+                    <div class="header"><div class="logo">🎗️ OncoSense AI</div><div>Breast Cancer Risk Assessment Report</div></div>
+                    <div class="info-row"><span class="label">Patient Name:</span><span>${document.getElementById('profileFullName').textContent || 'Guest User'}</span></div>
+                    <div class="info-row"><span class="label">Report Date:</span><span>${new Date().toLocaleString()}</span></div>
+                    <div class="info-row"><span class="label">Risk Score:</span><span class="${lastPredictionData.risk_level === 'High Risk' ? 'risk-high' : (lastPredictionData.risk_level === 'Moderate Risk' ? 'risk-mid' : 'risk-low')}">${lastPredictionData.risk_score}%</span></div>
+                    <div class="info-row"><span class="label">Risk Level:</span><span>${lastPredictionData.risk_level}</span></div>
+                    <div class="info-row"><span class="label">Recommendation:</span><span>${lastPredictionData.message}</span></div>
+                    <div class="footer"><p>⚠️ AI-assisted assessment. Please consult a medical professional.</p><p>© 2026 OncoSense AI</p></div>
+                </div>
+            </body>
+            </html>
+        `;
+        
+        html2pdf().set({ margin: 0.5, filename: `OncoSense_Report_${Date.now()}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(reportHTML).save();
+    }
+    
+    // ========== DONATION CERTIFICATE ==========
+    function generateCertificate(name, amount) {
+        const certificateHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head><title>Donation Certificate</title>
+            <style>
+                body { font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(145deg, #fff9f5, #ffeef4); }
+                .certificate { width: 800px; background: white; border: 15px solid #e83a6b; border-radius: 20px; padding: 40px; text-align: center; }
+                .certificate h1 { color: #e83a6b; font-size: 36px; margin-bottom: 10px; }
+                .amount { font-size: 48px; font-weight: bold; color: #e83a6b; margin: 20px 0; }
+                .seal { font-size: 60px; margin: 20px 0; }
+                .footer { margin-top: 30px; font-size: 12px; color: #999; }
+            </style>
+            </head>
+            <body>
+                <div class="certificate">
+                    <div class="seal">🎗️</div>
+                    <h1>Certificate of Appreciation</h1>
+                    <p>This certificate is proudly presented to</p>
+                    <h2>${name}</h2>
+                    <p>for their generous donation of</p>
+                    <div class="amount">₹${amount}</div>
+                    <p>to support breast cancer awareness and AI-driven early detection research.</p>
+                    <div class="footer"><p>OncoSense AI Foundation | Date: ${new Date().toLocaleDateString()}</p><p>Certificate ID: OSC-${Date.now()}</p></div>
+                </div>
+            </body>
+            </html>
+        `;
+        html2pdf().set({ margin: 0.5, filename: `OncoSense_Certificate_${name.replace(/\s+/g, '_')}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(certificateHTML).save();
+    }
+    
+    // ========== INITIALIZE ==========
+    const username = localStorage.getItem('username') || 'Guest';
+    document.getElementById('profileNameDisplay').textContent = username;
+    document.getElementById('profileAvatar').textContent = username[0].toUpperCase();
+    document.getElementById('profileFullName').textContent = username;
+    document.getElementById('profileEmailAddress').textContent = `${username.toLowerCase()}@oncosense.ai`;
+    
+    loadDoctors();
+    loadHistory();
+    updateAnalytics();
+    
+    // Auto-refresh analytics when new predictions are added
+    setInterval(() => {
+        if (document.getElementById('analyticsTab').classList.contains('active')) {
+            updateAnalytics();
+        }
+        if (document.getElementById('historyTab').classList.contains('active')) {
+            loadHistory();
+        }
+    }, 3000);
+    
+    // Close profile when clicking outside
+    document.addEventListener('click', function(event) {
+        const panel = document.getElementById('profilePanel');
+        const trigger = document.querySelector('.profile-trigger');
+        if (panel && trigger && panel.classList.contains('open') && !panel.contains(event.target) && !trigger.contains(event.target)) {
+            panel.classList.remove('open');
+        }
+    });
+    // ========== SEMINARS DATA ==========
+const seminarsData = [
+    {
+        id: 1,
+        title: "Breast Cancer Early Detection Seminar",
+        date: "2026-05-25",
+        time: "11:00 AM",
+        location: "Vadodara, Gujarat",
+        organizer: "OncoSense AI",
+        guest: "Dr. Priya Sharma",
+        status: "upcoming",
+        registered: 124,
+        maxSeats: 200,
+        category: "Awareness"
+    },
+    {
+        id: 2,
+        title: "AI in Breast Cancer Screening",
+        date: "2026-05-28",
+        time: "10:30 AM",
+        location: "Ahmedabad (Online)",
+        organizer: "OncoSense AI",
+        guest: "Dr. Michael Chen",
+        status: "upcoming",
+        registered: 89,
+        maxSeats: 500,
+        category: "Technology"
+    },
+    {
+        id: 3,
+        title: "Survivor Stories & Self-Examination",
+        date: new Date().toISOString().slice(0,10),
+        time: "02:00 PM",
+        location: "Online Webinar",
+        organizer: "OncoSense AI",
+        guest: "Ms. Sarah Johnson (Survivor)",
+        status: "live",
+        registered: 567,
+        maxSeats: 1000,
+        category: "Awareness"
+    },
+    {
+        id: 4,
+        title: "Breast Health Awareness Camp",
+        date: "2026-04-15",
+        time: "09:00 AM",
+        location: "Mumbai",
+        organizer: "OncoSense AI",
+        guest: "Dr. Emily Rodriguez",
+        status: "past",
+        registered: 345,
+        maxSeats: 300,
+        category: "Screening"
+    },
+    {
+        id: 5,
+        title: "Women's Health & Wellness Summit",
+        date: "2026-04-10",
+        time: "11:00 AM",
+        location: "Delhi",
+        organizer: "OncoSense AI",
+        guest: "Dr. David Kim",
+        status: "past",
+        registered: 512,
+        maxSeats: 500,
+        category: "Wellness"
+    }
+];
+
+// Get seminar registrations from localStorage
+function getSeminarRegistrations() {
+    const regs = localStorage.getItem('seminarRegistrations');
+    return regs ? JSON.parse(regs) : [];
+}
+
+// Save seminar registration
+function saveSeminarRegistration(registration) {
+    const regs = getSeminarRegistrations();
+    regs.push(registration);
+    localStorage.setItem('seminarRegistrations', JSON.stringify(regs));
+}
+
+// Check if user already registered for a seminar
+function isRegisteredForSeminar(seminarId) {
+    const regs = getSeminarRegistrations();
+    return regs.some(r => r.seminarId === seminarId && r.email === document.getElementById('donorEmail')?.value);
+}
+
+// Load seminars
+ function loadSeminars() {
+    // Dynamic divs not used anymore - content already in HTML
+    console.log('Seminars tab loaded (static content)');
+}
+
+function renderSeminarCards(seminars, type) {
+    if (seminars.length === 0) {
+        return '<div style="text-align:center; padding:2rem; color:#a47288;">No seminars found.</div>';
+    }
+    
+    let html = '<div class="doctors-grid">';
+    seminars.forEach(seminar => {
+        const registeredCount = seminar.registered || 0;
+        const available = (seminar.maxSeats - registeredCount);
+        const isFull = available <= 0;
+        
+        html += `
+            <div class="seminar-card" style="background: white; border-radius: 1rem; padding: 1rem; border: 1px solid rgba(232,58,107,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                    <div style="background: ${type === 'live' ? '#10b981' : (type === 'upcoming' ? '#e83a6b' : '#6b4c60')}; color: white; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.7rem;">
+                        ${type === 'live' ? '🔴 LIVE NOW' : (type === 'upcoming' ? '📅 Upcoming' : '📋 Past')}
+                    </div>
+                    <div style="font-size: 0.7rem; color: #e83a6b;">${seminar.category}</div>
+                </div>
+                <h3 style="margin: 0.5rem 0; font-size: 1.1rem;">${seminar.title}</h3>
+                <p style="font-size: 0.8rem; margin: 0.3rem 0;">📅 ${seminar.date}</p>
+                <p style="font-size: 0.8rem; margin: 0.3rem 0;">🕒 ${seminar.time}</p>
+                <p style="font-size: 0.8rem; margin: 0.3rem 0;">📍 ${seminar.location}</p>
+                <p style="font-size: 0.8rem; margin: 0.3rem 0;">👩‍⚕️ Guest: ${seminar.guest}</p>
+                <p style="font-size: 0.8rem; margin: 0.3rem 0;">🏢 ${seminar.organizer}</p>
+                <div style="margin: 0.5rem 0;">
+                    <div style="background: #f5f0f2; border-radius: 10px; height: 6px; overflow: hidden;">
+                        <div style="background: #e83a6b; width: ${(registeredCount/seminar.maxSeats)*100}%; height: 6px;"></div>
+                    </div>
+                    <p style="font-size: 0.7rem; margin-top: 0.3rem;">${registeredCount} / ${seminar.maxSeats} registered</p>
+                </div>
+                ${type !== 'past' ? `
+                    ${!isFull ? `<button class="btn-primary" onclick="openRegistrationModal(${seminar.id})" style="margin-top: 0.8rem; width: 100%;">📝 Register Now</button>` : `<button disabled style="margin-top: 0.8rem; width: 100%; padding: 0.8rem; background: #ccc; border: none; border-radius: 0.5rem;">❌ Full</button>`}
+                ` : ''}
+            </div>
+        `;
+    });
+    html += '</div>';
+    return html;
+}
+
+// Registration Modal
+let currentSeminarId = null;
+
+function openRegistrationModal(seminarId) {
+    currentSeminarId = seminarId;
+    const seminar = seminarsData.find(s => s.id === seminarId);
+    if (!seminar) return;
+    
+    document.getElementById('registerSeminarName').value = document.getElementById('profileFullName').textContent;
+    document.getElementById('registerSeminarEmail').value = document.getElementById('profileEmailAddress').textContent;
+    document.getElementById('registerSeminarPhone').value = '';
+    document.getElementById('registrationModal').style.display = 'flex';
+}
+
+function closeRegistrationModal() {
+    document.getElementById('registrationModal').style.display = 'none';
+    currentSeminarId = null;
+}
+
+function submitRegistration() {
+    const name = document.getElementById('registerSeminarName').value;
+    const email = document.getElementById('registerSeminarEmail').value;
+    const phone = document.getElementById('registerSeminarPhone').value;
+    const seminar = seminarsData.find(s => s.id === currentSeminarId);
+    
+    if (!name || !email || !phone) {
+        alert('Please fill all fields');
+        return;
+    }
+    
+    // Save registration
+    const registration = {
+        seminarId: currentSeminarId,
+        seminarTitle: seminar.title,
+        name: name,
+        email: email,
+        phone: phone,
+        date: new Date().toISOString(),
+        registrationId: 'REG-' + Date.now()
+    };
+    saveSeminarRegistration(registration);
+    
+    // Update registered count
+    seminar.registered++;
+    localStorage.setItem('seminarsData', JSON.stringify(seminarsData));
+    
+    alert(`✅ Registration successful for "${seminar.title}"!\nYour Registration ID: ${registration.registrationId}\nPlease check your email for confirmation.`);
+    closeRegistrationModal();
+    loadSeminars();
+    
+}
 </script>
 </body>
 </html>

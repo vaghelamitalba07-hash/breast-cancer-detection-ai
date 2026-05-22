@@ -4,210 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | OncoSense AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #fff9f5 0%, #ffeef4 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
-        .login-container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+        .login-box {
+            background: white;
             border-radius: 1.5rem;
-            padding: 2.5rem;
+            padding: 2rem;
             width: 100%;
             max-width: 400px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ec489a, #8b5cf6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            border: 1px solid rgba(232,58,107,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
             text-align: center;
-            margin-bottom: 2rem;
         }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #a1a1aa;
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #d4d4d8;
-            font-size: 0.9rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0.5rem;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #ec489a;
-            background: rgba(236, 72, 153, 0.1);
-        }
-
-        button {
+        .login-box img { width: 60px; border-radius: 50%; margin-bottom: 1rem; }
+        .login-box h2 { color: #2a1a2e; margin-bottom: 0.5rem; }
+        .login-box p { color: #6b4c60; margin-bottom: 1.5rem; }
+        .login-box input {
             width: 100%;
             padding: 0.75rem;
-            background: linear-gradient(135deg, #ec489a, #8b5cf6);
+            margin: 0.5rem 0;
+            background: #f5f0f2;
+            border: 1px solid #e8d5df;
+            border-radius: 0.5rem;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #e83a6b, #b03b8b);
             border: none;
             border-radius: 0.5rem;
             color: white;
-            font-size: 1rem;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.3s;
         }
-
-        button:hover {
-            transform: translateY(-2px);
-        }
-
-        .error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #ef4444;
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            color: #ef4444;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        .demo-info {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            font-size: 0.8rem;
-            color: #71717a;
-        }
-
-        .demo-info code {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-        }
-
-        .links {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .links a {
-            color: #ec489a;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .hidden {
-            display: none;
-        }
+        .error { color: #ef4444; margin-top: 0.5rem; font-size: 0.8rem; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo">🔬 OncoSense AI</div>
-        <h2>Welcome Back</h2>
-        <p class="subtitle">Sign in to access the dashboard</p>
-        
+    <div class="login-box">
+        <img src="/images/logo.png" alt="OncoSense AI">
+        <h2>OncoSense AI</h2>
+        <p>Sign in to access dashboard</p>
+        <input type="text" id="username" placeholder="Username" value="demo">
+        <input type="password" id="password" placeholder="Password" value="demo123">
         <div id="error" class="error hidden"></div>
-        
-        <form id="login-form">
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="username" placeholder="Enter your username" required>
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit">Sign In</button>
-        </form>
-        
-        <div class="demo-info">
-            <p>🔐 Demo Credentials:</p>
-            <p><code>username: demo</code> | <code>password: demo123</code></p>
-        </div>
-        
-        <div class="links">
-            <a href="/signup">Don't have an account? Sign up</a>
-        </div>
+        <button onclick="login()">Sign In</button>
     </div>
-
     <script>
-        const API_BASE = "/api";
-        
-        async function apiFetch(path, options = {}) {
-            const res = await fetch(`${API_BASE}${path}`, {
-                ...options,
-                headers: { "Content-Type": "application/json", ...options.headers }
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || "Request failed");
-            return data;
-        }
-        
-        document.getElementById("login-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const errorDiv = document.getElementById("error");
-            errorDiv.classList.add("hidden");
-            
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
+            errorDiv.classList.add('hidden');
             try {
-                const data = await apiFetch("/auth/login", {
-                    method: "POST",
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("username", data.username);
-                window.location.href = "/dashboard";
-            } catch (err) {
-                errorDiv.textContent = err.message;
-                errorDiv.classList.remove("hidden");
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('username', data.username);
+                    window.location.href = '/dashboard';
+                } else {
+                    errorDiv.textContent = data.detail || 'Login failed';
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch(err) {
+                errorDiv.textContent = 'Connection error';
+                errorDiv.classList.remove('hidden');
             }
-        });
-        
-        // Auto-fill demo credentials
-        document.getElementById("username").value = "demo";
-        document.getElementById("password").value = "demo123";
+        }
     </script>
 </body>
 </html>
